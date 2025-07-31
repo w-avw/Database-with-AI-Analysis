@@ -1,6 +1,7 @@
+import 'dotenv/config';
 import express from 'express';
 import { connectToDatabase } from './db/connection.js';
-import { configureGrafanaDatasource } from './grafana/datasource.js';
+import { setupGrafanaDatasource } from './grafana/datasource.js';
 import { getChatGPTResponse } from './chatgpt/api.js';
 import { logger } from './utils/logger.js';
 import importTxtFiles from './db/importTxt.js';
@@ -29,7 +30,7 @@ const startServer = async () => {
         await connectToDatabase();
         logger.info('Database connected successfully.');
 
-        configureGrafanaDatasource();
+        setupGrafanaDatasource();
         logger.info('Grafana datasource configured.');
 
         startScheduledImport();

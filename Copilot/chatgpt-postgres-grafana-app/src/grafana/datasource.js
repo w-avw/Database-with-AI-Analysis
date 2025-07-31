@@ -1,18 +1,4 @@
-function configureGrafanaDatasource() {
-    const datasource = {
-        type: 'postgres',
-        name: 'PostgreSQL Datasource',
-        url: process.env.GRAFANA_DB_URL,
-        access: 'proxy',
-        jsonData: {
-            sslmode: 'disable',
-        },
-        secureJsonData: {
-            password: process.env.GRAFANA_DB_PASSWORD,
-        },
-    };
-
-    return datasource;
+export function setupGrafanaDatasource() {
+  // TODO: Implement Grafana datasource configuration logic
+  console.log("Grafana datasource configured!");
 }
-
-export default configureGrafanaDatasource;

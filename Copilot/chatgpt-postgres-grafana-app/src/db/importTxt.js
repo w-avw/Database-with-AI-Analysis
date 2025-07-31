@@ -1,7 +1,12 @@
-const fs = require('fs');
-const path = require('path');
-const { Pool } = require('pg');
-const readline = require('readline');
+
+import fs from 'fs';
+import path from 'path';
+import { Pool } from 'pg';
+import readline from 'readline';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const pool = new Pool(); // Uses env vars for config
 
@@ -85,4 +90,4 @@ async function importSingleFile(filePath) {
   }
 }
 
-module.exports = importTxtFiles;
+export default importTxtFiles;

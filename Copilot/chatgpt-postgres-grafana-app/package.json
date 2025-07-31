@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "universaldb_chatgpt-postgres-grafana-app",
   "version": "1.0.0",
   "description": "A project that integrates PostgreSQL, ChatGPT API, and Grafana for portable data storage and visualization and insights.",
