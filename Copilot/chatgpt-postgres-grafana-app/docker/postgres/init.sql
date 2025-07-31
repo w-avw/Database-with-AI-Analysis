@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS data (
+    id SERIAL PRIMARY KEY,
+    content TEXT NOT NULL,
+    suggestions TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS improvements (
+    id SERIAL PRIMARY KEY,
+    data_id INT REFERENCES data(id),
+    improvement TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
