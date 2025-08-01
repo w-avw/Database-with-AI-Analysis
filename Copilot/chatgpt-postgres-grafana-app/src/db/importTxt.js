@@ -13,6 +13,8 @@ const pool = new Pool(); // Uses env vars for config
 const DATA_DIR = path.join(__dirname, '../../data');
 const PROCESSED_DIR = path.join(DATA_DIR, 'processed');
 
+
+
 if (!fs.existsSync(PROCESSED_DIR)) {
   fs.mkdirSync(PROCESSED_DIR, { recursive: true });
 }
@@ -46,6 +48,39 @@ async function importSingleFile(filePath) {
     crlfDelay: Infinity
   });
 
+
+  // Hardcoded table and columns to match your DB schema
+  const tableName = 'mydb'; // TODO: Replace with your actual table name
+  // Example: adjust this array to match your table columns in order
+  const dbColumns = [
+    'ID', // e.g. id
+    'Date', // e.g. name
+    'Time',// ... add all columns in order as in your schema
+    'Source type',
+    'Source',
+    'Source fleet',
+    'Destination type',
+    'Destination',
+    'Destination fleet',
+    'Service type',
+    'Service type info',
+    'AI security',
+    'E2EE security',
+    'Disconnection cause',
+    'Duration (secs.)',
+    'Time in queue (secs.)',
+    'Priority',
+    'Source location',
+    'Cell reselection',
+    'Status',
+    'Voice recording',
+    'Call forwarding',
+    'Source NMS',
+    'Network Controller',
+    'UTC offset (minutes)',
+    
+  ];
+
   let headers = [];
   let isFirstLine = true;
   let insertedAny = false;
@@ -54,26 +89,32 @@ async function importSingleFile(filePath) {
   const client = await pool.connect();
 
   try {
-    for await (const line of rl) {
+    for await (let line of rl) {
+      line = line.trim();
       if (isFirstLine) {
-        headers = line.split(';').map(h => h.trim().replace(/[^\w]/g, '_').toLowerCase());
+        headers = line.split(';').map(h => h.trim());
         isFirstLine = false;
         continue;
       }
-      if (!line.trim()) continue;
+      if (!line) continue; // skip empty lines
       totalCount++;
-      const values = line.split(';').map(v => v.trim());
-      // Assume first column is unique ID
-      const idValue = values[0];
-      const idCol = headers[0];
-      const checkQuery = `SELECT 1 FROM calls WHERE ${idCol} = $1 LIMIT 1`;
-      const checkRes = await client.query(checkQuery, [idValue]);
-      if (checkRes.rows.length > 0) {
-        duplicateCount++;
-        continue; // Skip duplicate
+      // Use ';' as the delimiter to match your data file, and convert empty fields to null
+      const values = line.split(';').map(v => v.trim() === '' ? null : v.trim());
+      if (values.length !== dbColumns.length) {
+        console.error(`⚠️ Skipping line: expected ${dbColumns.length} columns, got ${values.length}. Line:`, line);
+        continue; // skip instead of throwing
       }
-      const placeholders = values.map((_, i) => `$${i + 1}`).join(',');
-      const query = `INSERT INTO calls (${headers.join(',')}) VALUES (${placeholders})`;
+      // Optionally check for duplicates if your schema requires
+      // const idValue = values[0];
+      // const idCol = dbColumns[0];
+      // const checkQuery = `SELECT 1 FROM ${tableName} WHERE ${idCol} = $1 LIMIT 1`;
+      // const checkRes = await client.query(checkQuery, [idValue]);
+      // if (checkRes.rows.length > 0) {
+      //   duplicateCount++;
+      //   continue; // Skip duplicate
+      // }
+      const placeholders = values.map((_, i) => `$${i + 1}`).join(', ');
+      const query = `INSERT INTO ${tableName} (${dbColumns.join(', ')}) VALUES (${placeholders})`;
       await client.query(query, values);
       insertedAny = true;
     }
