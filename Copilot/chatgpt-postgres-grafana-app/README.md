@@ -1,3 +1,42 @@
+# Bulk Import Data with PostgreSQL COPY
+
+For fast and reliable import of your `;`-delimited data files, use the PostgreSQL `COPY` command from inside your database container:
+
+1. Copy your data file into the container:
+   ```bash
+   docker cp /path/to/your/data.txt mypg:/tmp/data.txt
+   ```
+
+2. Enter the container and start psql:
+   ```bash
+   docker exec -it mypg bash
+   psql -U myuser -d mydb
+   ```
+
+3. Run the COPY command (adjust table and file path as needed):
+   ```sql
+   COPY your_table FROM '/tmp/data.txt' DELIMITER ';' NULL '';
+   ```
+
+If your file has a header row, add `CSV HEADER`:
+   ```sql
+   COPY your_table FROM '/tmp/data.txt' DELIMITER ';' NULL '' CSV HEADER;
+   ```
+
+**To check your data:**
+```sql
+SELECT * FROM your_table LIMIT 10;
+```
+
+**To list tables:**
+```sql
+\dt
+```
+
+**To describe a table:**
+```sql
+\d+ your_table
+```
 
 # ChatGPT PostgreSQL Grafana App
 

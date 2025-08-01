@@ -8,7 +8,6 @@ import { connectToDatabase } from './db/connection.js'; // DB connection util
 import { setupGrafanaDatasource } from './grafana/datasource.js'; // Grafana integration stub
 import { getChatGPTResponse } from './chatgpt/api.js'; // ChatGPT API util
 import { logger } from './utils/logger.js'; // Logger util
-import importTxtFiles from './db/importTxt.js'; // TXT import logic
 import apiRouter from './api/index.js'; // API router
 
 

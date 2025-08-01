@@ -1,9 +1,11 @@
 
 -- SQL schema for ChatGPT-Postgres-Grafana App
 
+
 -- 1. Table to store parsed call data from .txt files
 CREATE TABLE IF NOT EXISTS calls (
-    id BIGINT PRIMARY KEY,
+    db_id SERIAL PRIMARY KEY,         -- Unique DB record ID
+    source_id BIGINT,                 -- Original ID from .txt file
     date_time TIMESTAMP,
     source_type TEXT,
     source TEXT,
@@ -29,10 +31,15 @@ CREATE TABLE IF NOT EXISTS calls (
     utc_offset_minutes INTEGER
 );
 
+
 -- 2. Table for ChatGPT suggestions (optional, for future use)
 CREATE TABLE IF NOT EXISTS suggestions (
     id SERIAL PRIMARY KEY,
-    call_id BIGINT REFERENCES calls(id),
+    call_id INTEGER REFERENCES calls(db_id),
     suggestion TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
+CREATE TABLE IF NOT EXISTS calls_staging (LIKE calls INCLUDING ALL);
+ALTER TABLE calls_staging DROP CONSTRAINT IF EXISTS calls_staging_pkey;

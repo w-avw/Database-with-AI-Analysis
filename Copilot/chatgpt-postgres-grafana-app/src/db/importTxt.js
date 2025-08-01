@@ -1,3 +1,6 @@
+// This file is responsible for importing text files into the database.
+// It processes each .txt file found in the data directory.
+// [ARCHIVED: Use PostgreSQL COPY for bulk import. See README.]
 
 import fs from 'fs';
 import path from 'path';
