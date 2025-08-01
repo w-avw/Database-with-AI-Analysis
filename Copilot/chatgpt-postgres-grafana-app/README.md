@@ -1,4 +1,12 @@
+
 # ChatGPT PostgreSQL Grafana App
+
+<!--
+  Project Overview:
+  - Integrates PostgreSQL, ChatGPT API, and Grafana for data storage, analysis, and visualization.
+  - Automates ingestion of .txt files into the database.
+  - Provides API endpoints for chatbot and analytics integration.
+-->
 
 This project integrates a PostgreSQL database with the ChatGPT API and Grafana for data visualization. The application is designed to fetch data from the database, interact with the ChatGPT API for insights, and visualize the results using Grafana.
 

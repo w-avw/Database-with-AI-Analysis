@@ -1,29 +1,35 @@
+
+# Docker Compose file for ChatGPT-Postgres-Grafana App
+# Defines two services: postgres (database) and app (Node.js backend)
 version: '3.8'
 
 services:
+  # 1. PostgreSQL database service
   postgres:
     build:
       context: ./docker/postgres
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}         # DB username from .env
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # DB password from .env
+      POSTGRES_DB: ${POSTGRES_DB}             # DB name from .env
     ports:
-      - "5432:5432"
+      - "5432:5432"                          # Expose DB port
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data # Persist DB data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql # Init schema
 
+  # 2. Node.js application service
   app:
     build:
       context: .
     depends_on:
       - postgres
     environment:
-      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-      CHATGPT_API_KEY: ${CHATGPT_API_KEY}
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB} # DB connection string
+      CHATGPT_API_KEY: ${CHATGPT_API_KEY} # OpenAI API key
     ports:
-      - "3000:3000"
+      - "3000:3000"                     # Expose app port
 
+# 3. Docker volume for persistent Postgres data
 volumes:
   postgres_data:
