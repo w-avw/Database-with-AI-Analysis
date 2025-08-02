@@ -1,32 +1,33 @@
 
-# Docker Compose file for ChatGPT-Postgres-Grafana App
-# Defines two services: postgres (database) and app (Node.js backend)
+# Docker Compose file for Universal DB - Fast TXT File Processing
+# PostgreSQL database with automatic .txt file import capability
 version: '3.8'
 
 services:
   # 1. PostgreSQL database service
-  postgres:
+  mypg:
     build:
       context: ./docker/postgres
+    container_name: mypg
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}         # DB username from .env
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # DB password from .env
-      POSTGRES_DB: ${POSTGRES_DB}             # DB name from .env
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypass
+      POSTGRES_DB: mydb
     ports:
-      - "5432:5432"                          # Expose DB port
+      - "5433:5432"                          # Expose DB port
     volumes:
       - postgres_data:/var/lib/postgresql/data # Persist DB data
       - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql # Init schema
 
-  # 2. Node.js application service
+  # 2. Node.js application service (optional - for API access)
   app:
     build:
       context: .
     depends_on:
-      - postgres
+      - mypg
     environment:
-      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB} # DB connection string
-      CHATGPT_API_KEY: ${CHATGPT_API_KEY} # OpenAI API key
+      DATABASE_URL: postgres://myuser:mypass@mypg:5432/mydb
+      CHATGPT_API_KEY: ${CHATGPT_API_KEY:-dummy_key}
     ports:
       - "3000:3000"                     # Expose app port
 
