@@ -1,0 +1,29 @@
+apiVersion: 1
+
+datasources:
+  - name: Universal-DB-PostgreSQL
+    type: postgres
+    access: proxy
+    host: universal-db-postgres:5432
+    database: mydb
+    user: myuser
+    password: mypass
+    sslmode: disable
+    maxOpenConns: 100
+    maxIdleConns: 30
+    maxIdleConnsAuto: true
+    connMaxLifetime: 14400
+    postgresVersion: 1300
+    timescaledb: false
+    jsonData:
+      database: mydb
+      sslmode: disable
+      maxOpenConns: 100
+      maxIdleConns: 30
+      connMaxLifetime: 14400
+      postgresVersion: 1300
+      timescaledb: false
+    secureJsonData:
+      password: mypass
+    isDefault: true
+    editable: true
