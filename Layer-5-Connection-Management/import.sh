@@ -12,4 +12,4 @@ echo "================================"
 echo "🔗 Connecting to PostgreSQL in Docker..."
 
 # Run the Python importer with all arguments passed through
-python3 simple_import.py "$@"
+python3 ../Layer-3-Core-Import-Engine/simple_import.py "$@"
