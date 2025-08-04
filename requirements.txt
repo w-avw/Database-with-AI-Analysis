@@ -1,0 +1,8 @@
+# PostgreSQL adapter for Python
+psycopg2-binary==2.9.7
+
+# File system monitoring for auto-import functionality
+watchdog==3.0.0
+
+# Standard library dependencies (included with Python)
+# os, sys, argparse, pathlib, time, shutil are built-in
