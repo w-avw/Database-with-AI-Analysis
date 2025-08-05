@@ -26,31 +26,11 @@
         "type": "grafana-postgresql-datasource",
         "uid": "eeu1dgjr0unswf"
       },
+      "description": "-- 📊 OVERVIEW: Panel Type: Stat | Description: Speech and timer timeout interference events | Unit: Short | Decimals: 0\n-- 🎯 SETTINGS: Min/Max Values: None as it valuates all | Pagination: None | Thresholds: 10 / 50 / Green-Yellow-Red | Value mapping: None\n-- 💡 BEST PRACTICE: Show trend direction, use orange color scheme, add description \"Speech/Timer timeouts\"\n",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "fillOpacity": 80,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineWidth": 1,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
           },
           "mappings": [],
           "thresholds": {
@@ -70,33 +50,28 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 3,
+        "w": 4,
         "x": 0,
         "y": 0
       },
-      "id": 27,
+      "id": 4,
       "options": {
-        "barRadius": 0,
-        "barWidth": 0.97,
-        "fullHighlight": false,
-        "groupWidth": 0.7,
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
         "orientation": "auto",
-        "showValue": "auto",
-        "stacking": "none",
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
         },
-        "xTickLabelRotation": -60,
-        "xTickLabelSpacing": 0
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
       "pluginVersion": "12.2.0-16711121739",
       "targets": [
@@ -104,7 +79,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \r\n    EXTRACT(HOUR FROM date_time) as \"Hour\", -- extracts hour for X-axis\r\n    CASE EXTRACT(DOW FROM date_time)\r\n        WHEN 0 THEN 'Sunday'\r\n        WHEN 1 THEN 'Monday'\r\n        WHEN 2 THEN 'Tuesday'\r\n        WHEN 3 THEN 'Wednesday'\r\n        WHEN 4 THEN 'Thursday'\r\n        WHEN 5 THEN 'Friday'\r\n        WHEN 6 THEN 'Saturday'\r\n    END as \"Day\", -- converts day of week for Y-axis\r\n    COUNT(*) as \"Call Count\" -- counts calls for each hour-day combination\r\nFROM call_records -- from the main call_records table\r\nWHERE date_time IS NOT NULL -- only includes records with valid timestamps\r\nGROUP BY EXTRACT(HOUR FROM date_time), EXTRACT(DOW FROM date_time) -- groups by hour and day of week\r\nORDER BY EXTRACT(DOW FROM date_time), EXTRACT(HOUR FROM date_time); -- sorts by day then hour\r\n-- Creates heatmap showing traffic patterns across time for resource allocation\r\n",
+          "rawSql": "SELECT \r\n    COUNT(*) as value -- counts all records that match timeout criteria\r\nFROM call_records -- from the main call_records table\r\nWHERE disconnection_cause LIKE '%timeout%' -- filters for disconnection causes containing 'timeout'\r\n    OR disconnection_cause LIKE '%timer%'; -- or disconnection causes containing 'timer'\r\n-- Counts calls that ended due to timeout or timer-related issues (interference indicators)\r\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -125,8 +100,255 @@
           }
         }
       ],
-      "title": "New panel",
-      "type": "barchart"
+      "title": "Interference Events",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "eeu1dgjr0unswf"
+      },
+      "description": "-- 📊 OVERVIEW: Panel Type: Stat | Description: Count of critical system failures and errors | Unit: Short | Decimals: 0\n-- 🎯 SETTINGS: Min/Max Values: None as it valuates all | Pagination: None | Thresholds: 5 / 20 / Green-Yellow-Red | Value mapping: None\n-- 💡 BEST PRACTICE: Use red background when value > 0, add alert icon, enable sparkline for trend",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 4,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16711121739",
+      "targets": [
+        {
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT COUNT(*) as value \r\nFROM call_records \r\nWHERE disconnection_cause IN ('034 - Error in SBS', '016 - Unknown TETRA identity', '019 - Call restoration of the other user failed'); -- Counts only calls that ended with specific critical error types\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Critical Failures Count",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "eeu1dgjr0unswf"
+      },
+      "description": "-- 📊 OVERVIEW: Panel Type: Gauge | Description: System health percentage based on success rate | Unit: Percent (0-100) | Decimals: 2\n-- 🎯 SETTINGS: Min/Max Values: 0 and 100 | Pagination: None | Thresholds: 70 / 90 / Red-Yellow-Green | Value mapping: None\n-- 💡 BEST PRACTICE: Use \"From thresholds\" color scheme, enable needle display, set decimals to 1",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 8,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.2.0-16711121739",
+      "targets": [
+        {
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \r\n    ROUND((COUNT(*) FILTER (WHERE disconnection_cause = '001 - User requested disconnection') * 100.0 / COUNT(*))::numeric, 2) as value -- calculates success percentage and rounds to 2 decimals\r\nFROM call_records; -- from the main call_records table\r\n-- Calculates success rate by dividing successful calls (user disconnections) by total calls, multiplied by 100\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "System Health Score",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "eeu1dgjr0unswf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 11,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16711121739",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eeu1dgjr0unswf"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT COUNT(*) as value -- counts all rows and returns as 'value' column\r\nFROM call_records -- from the main calls table\r\n-- Gets all records from calls table, counts them and returns total amount",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Total Call Records",
+      "type": "stat"
     },
     {
       "datasource": {
@@ -209,463 +431,6 @@
       "type": "gauge"
     },
     {
-      "description": "-- 📊 OVERVIEW: Panel Type: Alert list | Description: Critical system alerts from last 24 hours | Unit: Count | Decimals: 0\n-- 🎯 SETTINGS: Min/Max Values: None as it valuates all | Pagination: 50 rows | Thresholds: None | Value mapping: None\n-- 💡 BEST PRACTICE: Enable unified alerting, set auto-refresh 30s, use alert severity mapping, show alert details\n",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 4,
-        "x": 14,
-        "y": 3
-      },
-      "id": 8,
-      "options": {
-        "alertInstanceLabelFilter": "",
-        "alertName": "",
-        "dashboardAlerts": false,
-        "groupBy": [],
-        "groupMode": "default",
-        "maxItems": 20,
-        "showInactiveAlerts": false,
-        "sortOrder": 1,
-        "stateFilter": {
-          "error": true,
-          "firing": true,
-          "noData": false,
-          "normal": false,
-          "pending": true,
-          "recovering": true
-        },
-        "viewMode": "list"
-      },
-      "pluginVersion": "12.2.0-16711121739",
-      "title": "Critical System Alerts",
-      "type": "alertlist"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "eeu1dgjr0unswf"
-      },
-      "description": "-- 📊 OVERVIEW: Panel Type: Stat | Description: Speech and timer timeout interference events | Unit: Short | Decimals: 0\n-- 🎯 SETTINGS: Min/Max Values: None as it valuates all | Pagination: None | Thresholds: 10 / 50 / Green-Yellow-Red | Value mapping: None\n-- 💡 BEST PRACTICE: Show trend direction, use orange color scheme, add description \"Speech/Timer timeouts\"\n",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 0,
-        "y": 8
-      },
-      "id": 4,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.2.0-16711121739",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT \r\n    COUNT(*) as value -- counts all records that match timeout criteria\r\nFROM call_records -- from the main call_records table\r\nWHERE disconnection_cause LIKE '%timeout%' -- filters for disconnection causes containing 'timeout'\r\n    OR disconnection_cause LIKE '%timer%'; -- or disconnection causes containing 'timer'\r\n-- Counts calls that ended due to timeout or timer-related issues (interference indicators)\r\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Interference Events",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "eeu1dgjr0unswf"
-      },
-      "description": "-- 📊 OVERVIEW: Panel Type: Stat | Description: Count of critical system failures and errors | Unit: Short | Decimals: 0\n-- 🎯 SETTINGS: Min/Max Values: None as it valuates all | Pagination: None | Thresholds: 5 / 20 / Green-Yellow-Red | Value mapping: None\n-- 💡 BEST PRACTICE: Use red background when value > 0, add alert icon, enable sparkline for trend",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 4,
-        "y": 8
-      },
-      "id": 3,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.2.0-16711121739",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT COUNT(*) as value \r\nFROM call_records \r\nWHERE disconnection_cause IN ('034 - Error in SBS', '016 - Unknown TETRA identity', '019 - Call restoration of the other user failed'); -- Counts only calls that ended with specific critical error types\r\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Critical Failures Count",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "eeu1dgjr0unswf"
-      },
-      "description": "-- 📊 OVERVIEW: Panel Type: Gauge | Description: System health percentage based on success rate | Unit: Percent (0-100) | Decimals: 2\n-- 🎯 SETTINGS: Min/Max Values: 0 and 100 | Pagination: None | Thresholds: 70 / 90 / Red-Yellow-Green | Value mapping: None\n-- 💡 BEST PRACTICE: Use \"From thresholds\" color scheme, enable needle display, set decimals to 1",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 3,
-        "x": 8,
-        "y": 8
-      },
-      "id": 2,
-      "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "sizing": "auto"
-      },
-      "pluginVersion": "12.2.0-16711121739",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT \r\n    ROUND((COUNT(*) FILTER (WHERE disconnection_cause = '001 - User requested disconnection') * 100.0 / COUNT(*))::numeric, 2) as value -- calculates success percentage and rounds to 2 decimals\r\nFROM call_records; -- from the main call_records table\r\n-- Calculates success rate by dividing successful calls (user disconnections) by total calls, multiplied by 100\r\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "System Health Score",
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "eeu1dgjr0unswf"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 3,
-        "x": 11,
-        "y": 8
-      },
-      "id": 1,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.2.0-16711121739",
-      "targets": [
-        {
-          "datasource": {
-            "type": "grafana-postgresql-datasource",
-            "uid": "eeu1dgjr0unswf"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT COUNT(*) as value -- counts all rows and returns as 'value' column\r\nFROM call_records -- from the main calls table\r\n-- Gets all records from calls table, counts them and returns total amount",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Total Call Records",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "eeu1dgjr0unswf"
-      },
-      "description": "-- 📊 OVERVIEW: Panel Type: Heatmap | Description: Average call duration by hour and network type | Unit: Seconds | Decimals: 2\n-- 🎯 SETTINGS: Min/Max Values: None as it valuates all | Pagination: None | Thresholds: 30 / 120 / Green-Yellow-Red | Value mapping: None\n-- 💡 BEST PRACTICE: Use seconds unit, set bucket size to 1 hour, enable hover tooltip, normalize by row\n",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "scaleDistribution": {
-              "type": "linear"
-            }
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 4,
-        "x": 14,
-        "y": 8
-      },
-      "id": 12,
-      "options": {
-        "calculate": false,
-        "cellGap": 1,
-        "color": {
-          "exponent": 0.5,
-          "fill": "dark-orange",
-          "mode": "scheme",
-          "reverse": false,
-          "scale": "exponential",
-          "scheme": "Oranges",
-          "steps": 64
-        },
-        "exemplars": {
-          "color": "rgba(255,0,255,0.7)"
-        },
-        "filterValues": {
-          "le": 1e-9
-        },
-        "legend": {
-          "show": true
-        },
-        "rowsFrame": {
-          "layout": "auto"
-        },
-        "tooltip": {
-          "mode": "single",
-          "showColorScale": false,
-          "yHistogram": false
-        },
-        "yAxis": {
-          "axisPlacement": "left",
-          "reverse": false
-        }
-      },
-      "pluginVersion": "12.2.0-16711121739",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\r\n    EXTRACT(hour FROM date_time) as \"Hour\",\r\n    CASE \r\n        WHEN source_location LIKE 'SBS%' THEN SUBSTRING(source_location FROM 1 FOR 6)\r\n        WHEN source_location LIKE 'VOIP%' THEN 'VOIP'\r\n        ELSE 'OTHER'\r\n    END as \"Network Type\",\r\n    AVG(duration_secs)::numeric as \"Avg Call Duration\"\r\nFROM call_records\r\nWHERE source_location IS NOT NULL AND date_time IS NOT NULL AND duration_secs IS NOT NULL\r\nGROUP BY \r\n    EXTRACT(hour FROM date_time),\r\n    CASE \r\n        WHEN source_location LIKE 'SBS%' THEN SUBSTRING(source_location FROM 1 FOR 6)\r\n        WHEN source_location LIKE 'VOIP%' THEN 'VOIP'\r\n        ELSE 'OTHER'\r\n    END\r\nORDER BY \r\n    CASE \r\n        WHEN source_location LIKE 'SBS%' THEN SUBSTRING(source_location FROM 1 FOR 6)\r\n        WHEN source_location LIKE 'VOIP%' THEN 'VOIP'\r\n        ELSE 'OTHER'\r\n    END,\r\n    EXTRACT(hour FROM date_time); -- Creates heatmap showing average call duration by network type and hour to identify quality patterns\r\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Network Quality Heatmap",
-      "type": "heatmap"
-    },
-    {
       "datasource": {
         "type": "grafana-postgresql-datasource",
         "uid": "eeu1dgjr0unswf"
@@ -730,7 +495,7 @@
         "h": 5,
         "w": 6,
         "x": 0,
-        "y": 11
+        "y": 3
       },
       "id": 6,
       "options": {
@@ -784,15 +549,43 @@
       "description": "-- 📊 OVERVIEW: Panel Type: Heatmap | Description: Failure rate percentage by location and hour | Unit: Percent | Decimals: 2\n-- 🎯 SETTINGS: Min/Max Values: 0 and 100 | Pagination: None | Thresholds: 20 / 80 / Green-Yellow-Red | Value mapping: None\n-- 💡 BEST PRACTICE: Use percentage unit, enable data labels, set bucket size to 1 hour, sort Y-axis alphabetically\n",
       "fieldConfig": {
         "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
+            "lineWidth": 1,
             "scaleDistribution": {
               "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
             }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
           }
         },
         "overrides": []
@@ -801,42 +594,30 @@
         "h": 5,
         "w": 8,
         "x": 6,
-        "y": 11
+        "y": 3
       },
       "id": 7,
       "options": {
-        "calculate": false,
-        "cellGap": 1,
-        "color": {
-          "exponent": 0.5,
-          "fill": "dark-orange",
-          "mode": "scheme",
-          "reverse": false,
-          "scale": "exponential",
-          "scheme": "Oranges",
-          "steps": 64
-        },
-        "exemplars": {
-          "color": "rgba(255,0,255,0.7)"
-        },
-        "filterValues": {
-          "le": 1e-9
-        },
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
         "legend": {
-          "show": true
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
         },
-        "rowsFrame": {
-          "layout": "auto"
-        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
-          "showColorScale": false,
-          "yHistogram": false
+          "sort": "none"
         },
-        "yAxis": {
-          "axisPlacement": "left",
-          "reverse": false
-        }
+        "xTickLabelRotation": -45,
+        "xTickLabelSpacing": 0
       },
       "pluginVersion": "12.2.0-16711121739",
       "targets": [
@@ -844,7 +625,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\r\n    EXTRACT(hour FROM date_time) as \"Hour\",\r\n    SUBSTRING(source_location FROM 1 FOR 10) as \"Location\",\r\n    ROUND((COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001 - User requested disconnection')) * 100.0 / NULLIF(COUNT(*), 0))::numeric, 2) as \"Failure Rate %\"\r\nFROM call_records\r\nWHERE source_location IS NOT NULL AND date_time IS NOT NULL\r\nGROUP BY \r\n    EXTRACT(hour FROM date_time),\r\n    SUBSTRING(source_location FROM 1 FOR 10)\r\nHAVING COUNT(*) > 5\r\nORDER BY \r\n    SUBSTRING(source_location FROM 1 FOR 10),\r\n    EXTRACT(hour FROM date_time); -- Creates heatmap showing failure percentage by location and hour, excluding normal user disconnections\r\n",
+          "rawSql": "SELECT\r\n    SUBSTRING(source_location FROM 1 FOR 15) as \"Location\", -- X-axis: location (first 15 chars for readability)\r\n    ROUND(\r\n        (COUNT(CASE WHEN disconnection_cause NOT IN ('001 - User requested disconnection') THEN 1 END) * 100.0 / \r\n         NULLIF(COUNT(*), 0))::numeric, \r\n        1\r\n    ) as \"Failure Rate %\" -- Y-axis: overall failure rate percentage by location (1 decimal place)\r\nFROM call_records\r\nWHERE source_location IS NOT NULL \r\n    AND date_time IS NOT NULL\r\n    AND TRIM(source_location) != '' -- exclude empty locations\r\nGROUP BY \r\n    SUBSTRING(source_location FROM 1 FOR 15) -- group only by location\r\nHAVING COUNT(*) >= 20 -- only include locations with sufficient data (increased threshold for overall stats)\r\nORDER BY \r\n    \"Failure Rate %\" DESC; -- sort by highest failure rate first\r\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -866,7 +647,43 @@
         }
       ],
       "title": "Failure Rate by Location",
-      "type": "heatmap"
+      "type": "barchart"
+    },
+    {
+      "description": "-- 📊 OVERVIEW: Panel Type: Alert list | Description: Critical system alerts from last 24 hours | Unit: Count | Decimals: 0\n-- 🎯 SETTINGS: Min/Max Values: None as it valuates all | Pagination: 50 rows | Thresholds: None | Value mapping: None\n-- 💡 BEST PRACTICE: Enable unified alerting, set auto-refresh 30s, use alert severity mapping, show alert details\n",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 14,
+        "y": 3
+      },
+      "id": 8,
+      "options": {
+        "alertInstanceLabelFilter": "",
+        "alertName": "",
+        "dashboardAlerts": false,
+        "groupBy": [],
+        "groupMode": "default",
+        "maxItems": 20,
+        "showInactiveAlerts": false,
+        "sortOrder": 1,
+        "stateFilter": {
+          "error": true,
+          "firing": true,
+          "noData": false,
+          "normal": false,
+          "pending": true,
+          "recovering": true
+        },
+        "viewMode": "list"
+      },
+      "pluginVersion": "12.2.0-16711121739",
+      "title": "Critical System Alerts",
+      "type": "alertlist"
     },
     {
       "datasource": {
@@ -933,7 +750,7 @@
         "h": 5,
         "w": 4,
         "x": 0,
-        "y": 16
+        "y": 8
       },
       "id": 9,
       "options": {
@@ -1032,7 +849,7 @@
         "h": 5,
         "w": 5,
         "x": 4,
-        "y": 16
+        "y": 8
       },
       "id": 10,
       "options": {
@@ -1126,7 +943,7 @@
         "h": 5,
         "w": 5,
         "x": 9,
-        "y": 16
+        "y": 8
       },
       "id": 11,
       "options": {
@@ -1170,6 +987,123 @@
       ],
       "title": " Location-Based Interference Hotspots",
       "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "eeu1dgjr0unswf"
+      },
+      "description": "-- 📊 OVERVIEW: Panel Type: Heatmap | Description: Average call duration by hour and network type | Unit: Seconds | Decimals: 2\n-- 🎯 SETTINGS: Min/Max Values: None as it valuates all | Pagination: None | Thresholds: 30 / 120 / Green-Yellow-Red | Value mapping: None\n-- 💡 BEST PRACTICE: Use seconds unit, set bucket size to 1 hour, enable hover tooltip, normalize by row\n",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 50,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "pointShape": "circle",
+            "pointSize": {
+              "fixed": 9
+            },
+            "pointStrokeWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "show": "points"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 14,
+        "y": 8
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mapping": "auto",
+        "series": [
+          {
+            "x": {
+              "matcher": {
+                "id": "byName",
+                "options": "Hour"
+              }
+            },
+            "y": {
+              "matcher": {
+                "id": "byName",
+                "options": "Avg Call Duration"
+              }
+            }
+          }
+        ],
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.2.0-16711121739",
+      "targets": [
+        {
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n    EXTRACT(HOUR FROM date_time) as \"Hour\", -- X-axis: hour of day (0-23)\r\n    CASE \r\n        WHEN source_location LIKE 'SBS%' THEN SUBSTRING(source_location FROM 1 FOR 6)\r\n        WHEN source_location LIKE 'VOIP%' THEN 'VOIP'\r\n        ELSE 'OTHER'\r\n    END as \"Network Type\", -- Y-axis: categorized network types (SBS-XX, VOIP, OTHER)\r\n    ROUND(AVG(duration_secs)::numeric, 1) as \"Avg Call Duration\" -- Value: average call duration in seconds (1 decimal)\r\nFROM call_records\r\nWHERE source_location IS NOT NULL \r\n    AND date_time IS NOT NULL \r\n    AND duration_secs IS NOT NULL\r\n    AND duration_secs > 0 -- exclude zero duration calls (connection failures)\r\nGROUP BY \r\n    EXTRACT(HOUR FROM date_time),\r\n    CASE \r\n        WHEN source_location LIKE 'SBS%' THEN SUBSTRING(source_location FROM 1 FOR 6)\r\n        WHEN source_location LIKE 'VOIP%' THEN 'VOIP'\r\n        ELSE 'OTHER'\r\n    END\r\nHAVING COUNT(*) >= 5 -- only include hour-network combinations with sufficient data\r\nORDER BY \r\n    \"Network Type\",\r\n    \"Hour\";\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Network Quality",
+      "type": "xychart"
     },
     {
       "datasource": {
@@ -1224,7 +1158,7 @@
         "h": 5,
         "w": 4,
         "x": 0,
-        "y": 21
+        "y": 13
       },
       "id": 13,
       "options": {
@@ -1318,7 +1252,7 @@
         "h": 5,
         "w": 5,
         "x": 4,
-        "y": 21
+        "y": 13
       },
       "id": 14,
       "options": {
@@ -1395,7 +1329,7 @@
         "h": 5,
         "w": 9,
         "x": 9,
-        "y": 21
+        "y": 13
       },
       "id": 15,
       "options": {
@@ -1497,7 +1431,7 @@
         "h": 5,
         "w": 4,
         "x": 0,
-        "y": 26
+        "y": 18
       },
       "id": 16,
       "options": {
@@ -1602,7 +1536,7 @@
         "h": 5,
         "w": 5,
         "x": 4,
-        "y": 26
+        "y": 18
       },
       "id": 17,
       "options": {
@@ -1697,7 +1631,7 @@
         "h": 5,
         "w": 9,
         "x": 9,
-        "y": 26
+        "y": 18
       },
       "id": 18,
       "options": {
@@ -1808,7 +1742,7 @@
         "h": 5,
         "w": 4,
         "x": 0,
-        "y": 31
+        "y": 23
       },
       "id": 19,
       "options": {
@@ -1898,7 +1832,7 @@
         "h": 5,
         "w": 5,
         "x": 4,
-        "y": 31
+        "y": 23
       },
       "id": 20,
       "options": {
@@ -2013,7 +1947,7 @@
         "h": 5,
         "w": 5,
         "x": 9,
-        "y": 31
+        "y": 23
       },
       "id": 21,
       "options": {
@@ -2123,7 +2057,7 @@
         "h": 5,
         "w": 4,
         "x": 14,
-        "y": 31
+        "y": 23
       },
       "id": 22,
       "options": {
@@ -2195,7 +2129,7 @@
         "h": 7,
         "w": 9,
         "x": 0,
-        "y": 36
+        "y": 28
       },
       "id": 24,
       "options": {
@@ -2274,7 +2208,7 @@
         "h": 7,
         "w": 9,
         "x": 9,
-        "y": 36
+        "y": 28
       },
       "id": 25,
       "options": {
@@ -2380,7 +2314,7 @@
         "h": 8,
         "w": 9,
         "x": 0,
-        "y": 43
+        "y": 35
       },
       "id": 26,
       "options": {
@@ -2434,6 +2368,113 @@
       ],
       "title": "Daily Call Volume Distribution",
       "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "eeu1dgjr0unswf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 9,
+        "y": 35
+      },
+      "id": 27,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": -60,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.2.0-16711121739",
+      "targets": [
+        {
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \r\n    EXTRACT(HOUR FROM date_time) as \"Hour\", -- extracts hour for X-axis\r\n    CASE EXTRACT(DOW FROM date_time)\r\n        WHEN 0 THEN 'Sunday'\r\n        WHEN 1 THEN 'Monday'\r\n        WHEN 2 THEN 'Tuesday'\r\n        WHEN 3 THEN 'Wednesday'\r\n        WHEN 4 THEN 'Thursday'\r\n        WHEN 5 THEN 'Friday'\r\n        WHEN 6 THEN 'Saturday'\r\n    END as \"Day\", -- converts day of week for Y-axis\r\n    COUNT(*) as \"Call Count\" -- counts calls for each hour-day combination\r\nFROM call_records -- from the main call_records table\r\nWHERE date_time IS NOT NULL -- only includes records with valid timestamps\r\nGROUP BY EXTRACT(HOUR FROM date_time), EXTRACT(DOW FROM date_time) -- groups by hour and day of week\r\nORDER BY EXTRACT(DOW FROM date_time), EXTRACT(HOUR FROM date_time); -- sorts by day then hour\r\n-- Creates heatmap showing traffic patterns across time for resource allocation\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "New panel",
+      "type": "barchart"
     }
   ],
   "preload": false,
@@ -2450,5 +2491,5 @@
   "timezone": "browser",
   "title": "New dashboard",
   "uid": "fc054eb6-69ab-461d-a315-b10354622963",
-  "version": 3
+  "version": 5
 }
