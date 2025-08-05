@@ -40,22 +40,3 @@ WHERE duration_secs IS NOT NULL AND duration_secs > 0; -- Returns all call durat
 SELECT time_in_queue_secs
 FROM call_records 
 WHERE time_in_queue_secs IS NOT NULL AND time_in_queue_secs > 0;
-
--- 28. Queue vs Call Duration (XY Chart)
-SELECT 
-    time_in_queue_secs as "Queue Time",
-    duration_secs as "Call Duration"
-FROM call_records 
-WHERE time_in_queue_secs IS NOT NULL 
-    AND duration_secs IS NOT NULL 
-    AND time_in_queue_secs > 0
-    AND duration_secs > 0;
-
--- 29. Average Queue Time by Priority (Bar gauge)
-SELECT 
-    priority::text as metric,
-    AVG(time_in_queue_secs) as value
-FROM call_records 
-WHERE priority IS NOT NULL AND time_in_queue_secs IS NOT NULL
-GROUP BY priority 
-ORDER BY priority;

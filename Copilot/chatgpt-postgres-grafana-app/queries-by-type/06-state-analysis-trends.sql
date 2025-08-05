@@ -9,9 +9,9 @@
 SELECT 
     DATE_TRUNC('hour', date_time) as time,
     CASE 
-        WHEN COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001 - User requested disconnection')) * 100.0 / COUNT(*) > 20 THEN 'CRITICAL'
-        WHEN COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001 - User requested disconnection')) * 100.0 / COUNT(*) > 10 THEN 'WARNING'
-        ELSE 'NORMAL'
+        WHEN COUNT(CASE WHEN disconnection_cause NOT IN ('001 - User requested disconnection') THEN 1 END) * 100.0 / COUNT(*) > 20 THEN 2
+        WHEN COUNT(CASE WHEN disconnection_cause NOT IN ('001 - User requested disconnection') THEN 1 END) * 100.0 / COUNT(*) > 10 THEN 1
+        ELSE 0
     END as "System Status"
 FROM call_records 
 WHERE date_time IS NOT NULL
@@ -32,21 +32,12 @@ ORDER BY x;
 
 -- Additional trend queries:
 
--- 38. Call Pattern Trends (Trend)
-SELECT 
-    ROW_NUMBER() OVER (ORDER BY DATE_TRUNC('hour', date_time)) as x,
-    COUNT(*) as y
-FROM call_records 
-WHERE date_time IS NOT NULL
-GROUP BY DATE_TRUNC('hour', date_time)
-ORDER BY x;
-
 -- 6. Calls Over Time by Hour (Time series)
 SELECT 
     DATE_TRUNC('hour', date_time) as time,
     COUNT(*) as "Total Calls",
-    COUNT(*) FILTER (WHERE source_type = 'ISSI') as "ISSI Calls",
-    COUNT(*) FILTER (WHERE source_type = 'VOIP') as "VOIP Calls"
+    COUNT(CASE WHEN source_type = 'ISSI' THEN 1 END) as "ISSI Calls",
+    COUNT(CASE WHEN source_type = 'VOIP' THEN 1 END) as "VOIP Calls"
 FROM call_records 
 WHERE date_time IS NOT NULL
 GROUP BY DATE_TRUNC('hour', date_time)
@@ -66,9 +57,9 @@ ORDER BY time;
 -- 8. Call Success Rate Over Time (Time series)
 SELECT 
     DATE_TRUNC('hour', date_time) as time,
-    COUNT(*) FILTER (WHERE disconnection_cause = '001 - User requested disconnection') * 100.0 / COUNT(*) as "Success Rate %",
-    COUNT(*) FILTER (WHERE disconnection_cause LIKE '%timeout%') * 100.0 / COUNT(*) as "Timeout Rate %",
-    COUNT(*) FILTER (WHERE disconnection_cause LIKE '%failure%') * 100.0 / COUNT(*) as "Failure Rate %"
+    COUNT(CASE WHEN disconnection_cause = '001 - User requested disconnection' THEN 1 END) * 100.0 / COUNT(*) as "Success Rate %",
+    COUNT(CASE WHEN disconnection_cause LIKE '%timeout%' THEN 1 END) * 100.0 / COUNT(*) as "Timeout Rate %",
+    COUNT(CASE WHEN disconnection_cause LIKE '%failure%' THEN 1 END) * 100.0 / COUNT(*) as "Failure Rate %"
 FROM call_records 
 WHERE date_time IS NOT NULL
 GROUP BY DATE_TRUNC('hour', date_time)

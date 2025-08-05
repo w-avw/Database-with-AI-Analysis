@@ -10,10 +10,6 @@ FROM call_records
 GROUP BY source_type 
 ORDER BY COUNT(*) DESC;
 
--- 10. Call Duration Distribution (Histogram)
-SELECT duration_secs 
-FROM call_records 
-WHERE duration_secs IS NOT NULL AND duration_secs > 0;
 
 -- 11. Priority Distribution (Pie chart)
 SELECT 
