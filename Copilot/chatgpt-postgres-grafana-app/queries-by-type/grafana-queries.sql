@@ -192,7 +192,36 @@ ORDER BY
 -- 🔍 NETWORK CONTROLLER ANALYSIS - PUNTOS DE COMPARACIÓN
 -- ═══════════════════════════════════════════════════════════════════════
 
--- 13. Controller Performance Comparison (Bar chart)
+-- 13. Base Station Availability by Fleet (Table)
+-- 📊 OVERVIEW: Panel Type: Table | Description: Fleet base station status showing busy vs available capacity | Unit: Count and Status | Decimals: 0
+-- 🎯 SETTINGS: Min/Max Values: None as it valuates all | Pagination: 20 rows | Thresholds: None | Value mapping: None
+-- 💡 BEST PRACTICE: Use conditional formatting for status column, enable sorting, color-code availability status, show fleet hierarchy
+SELECT 
+    source_fleet as "Fleet Base", -- displays the fleet identifier (base station group)
+    COUNT(*) as "Total Activity", -- counts total call activity for capacity assessment
+    COUNT(*) FILTER (WHERE disconnection_cause = '001 - User requested disconnection') as "Normal Operations", -- counts successful normal disconnections
+    COUNT(*) FILTER (WHERE disconnection_cause LIKE '%timeout%' OR disconnection_cause LIKE '%timer%') as "Normal Timeouts", -- counts expected timeout operations
+    COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001 - User requested disconnection') 
+        AND disconnection_cause NOT LIKE '%timeout%' 
+        AND disconnection_cause NOT LIKE '%timer%') as "System Issues", -- counts actual system problems
+    CASE 
+        WHEN COUNT(*) > 500 THEN 'BUSY'
+        WHEN COUNT(*) > 100 THEN 'ACTIVE'
+        WHEN COUNT(*) > 10 THEN 'AVAILABLE'
+        ELSE 'STANDBY'
+    END as "Base Status", -- categorizes base availability based on call volume
+    ROUND((COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001 - User requested disconnection') 
+        AND disconnection_cause NOT LIKE '%timeout%' 
+        AND disconnection_cause NOT LIKE '%timer%') * 100.0 / NULLIF(COUNT(*), 0))::numeric, 2) as "Issue Rate %" -- calculates percentage of actual problems
+FROM call_records -- from the main call_records table
+WHERE source_fleet IS NOT NULL -- only includes records with valid fleet data
+    AND source_fleet != '' -- and non-empty fleet values
+GROUP BY source_fleet -- groups results by fleet base
+HAVING COUNT(*) > 5 -- only includes fleets with sufficient activity for analysis
+ORDER BY COUNT(*) DESC; -- sorts by activity level, showing busiest bases first
+-- Analyzes base station capacity and availability by fleet, distinguishing between normal operations and actual system issues
+
+-- 14. Controller Performance Comparison (Bar chart)
 -- 📊 OVERVIEW: Panel Type: Bar chart | Description: Performance comparison across network controllers | Unit: Count | Decimals: 0
 -- 🎯 SETTINGS: Min/Max Values: None as it valuates all | Pagination: None | Thresholds: None | Value mapping: None
 -- 💡 BEST PRACTICE: Use contrasting colors per metric, enable data labels, sort by total calls, add legend
