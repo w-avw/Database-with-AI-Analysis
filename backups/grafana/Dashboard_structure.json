@@ -2341,12 +2341,12 @@
         "type": "grafana-postgresql-datasource",
         "uid": "eeu1dgjr0unswf"
       },
-      "description": "-- 📊 OVERVIEW: Panel Type: Bar chart | Description: Performance comparison across network controllers | Unit: Count | Decimals: 0\n-- 🎯 SETTINGS: Min/Max Values: None as it valuates all | Pagination: None | Thresholds: None | Value mapping: None\n-- 💡 BEST PRACTICE: Use contrasting colors per metric, enable data labels, sort by total calls, add legend\n",
+      "description": "Takes all errors from all bases and summarizes which present the most\n\n- Except for causes: 001, 033, 013",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "red",
-            "mode": "palette-classic"
+            "fixedColor": "#bb533d",
+            "mode": "shades"
           },
           "custom": {
             "hideFrom": {
@@ -2355,34 +2355,10 @@
               "viz": false
             }
           },
+          "decimals": 0,
           "mappings": []
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "value"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 13,
@@ -2440,7 +2416,7 @@
           }
         }
       ],
-      "title": "Network Controller Performance",
+      "title": "System Error Distribution",
       "type": "piechart"
     },
     {
@@ -3047,7 +3023,7 @@
       "type": "timeseries"
     },
     {
-      "description": "-- 📊 OVERVIEW: Panel Type: Alert list | Description: Critical system alerts from last 24 hours | Unit: Count | Decimals: 0\n-- 🎯 SETTINGS: Min/Max Values: None as it valuates all | Pagination: 50 rows | Thresholds: None | Value mapping: None\n-- 💡 BEST PRACTICE: Enable unified alerting, set auto-refresh 30s, use alert severity mapping, show alert details\n",
+      "description": "After configuring the alerts in a different panel the matching criteria will show here\n\n- example alert is only showing",
       "fieldConfig": {
         "defaults": {},
         "overrides": []
@@ -3063,8 +3039,13 @@
         "alertInstanceLabelFilter": "",
         "alertName": "",
         "dashboardAlerts": false,
+        "datasource": "-- Grafana --",
+        "folder": {
+          "title": "Errors",
+          "uid": "feuacrv7pgav4f"
+        },
         "groupBy": [],
-        "groupMode": "default",
+        "groupMode": "custom",
         "maxItems": 20,
         "showInactiveAlerts": false,
         "sortOrder": 1,
@@ -5680,5 +5661,5 @@
   "timezone": "browser",
   "title": "NY Transport Dashboard",
   "uid": "fc054eb6-69ab-461d-a315-b10354622963",
-  "version": 48
+  "version": 51
 }
