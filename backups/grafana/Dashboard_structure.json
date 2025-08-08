@@ -3044,8 +3044,10 @@
           "title": "Errors",
           "uid": "feuacrv7pgav4f"
         },
-        "groupBy": [],
-        "groupMode": "custom",
+        "groupBy": [
+          "metric"
+        ],
+        "groupMode": "default",
         "maxItems": 20,
         "showInactiveAlerts": false,
         "sortOrder": 1,
@@ -5661,5 +5663,5 @@
   "timezone": "browser",
   "title": "NY Transport Dashboard",
   "uid": "fc054eb6-69ab-461d-a315-b10354622963",
-  "version": 51
+  "version": 52
 }
