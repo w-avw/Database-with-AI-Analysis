@@ -570,6 +570,32 @@
       "type": "text"
     },
     {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 11
+      },
+      "id": 67,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "# System Performance\r\n---",
+        "mode": "markdown"
+      },
+      "pluginVersion": "12.2.0-16711121739",
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
       "datasource": {
         "type": "grafana-postgresql-datasource",
         "uid": "eeu1dgjr0unswf"
@@ -628,7 +654,7 @@
         "h": 25,
         "w": 4,
         "x": 0,
-        "y": 11
+        "y": 13
       },
       "id": 12,
       "options": {
@@ -732,7 +758,7 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 96
+                "value": 111
               }
             ]
           },
@@ -872,7 +898,7 @@
         "h": 13,
         "w": 15,
         "x": 4,
-        "y": 11
+        "y": 13
       },
       "id": 34,
       "options": {
@@ -947,7 +973,7 @@
         "h": 12,
         "w": 5,
         "x": 19,
-        "y": 11
+        "y": 13
       },
       "id": 25,
       "options": {
@@ -997,7 +1023,7 @@
           }
         }
       ],
-      "title": "Error Code Distribution",
+      "title": "General Error Code Distribution",
       "type": "piechart"
     },
     {
@@ -1036,7 +1062,7 @@
         "h": 4,
         "w": 5,
         "x": 19,
-        "y": 23
+        "y": 25
       },
       "id": 37,
       "options": {
@@ -1165,7 +1191,7 @@
         "h": 12,
         "w": 7,
         "x": 4,
-        "y": 24
+        "y": 26
       },
       "id": 14,
       "options": {
@@ -1369,7 +1395,7 @@
         "h": 12,
         "w": 8,
         "x": 11,
-        "y": 24
+        "y": 26
       },
       "id": 11,
       "options": {
@@ -1496,7 +1522,7 @@
         "h": 9,
         "w": 5,
         "x": 19,
-        "y": 27
+        "y": 29
       },
       "id": 26,
       "options": {
@@ -1899,7 +1925,7 @@
         "h": 11,
         "w": 19,
         "x": 0,
-        "y": 36
+        "y": 38
       },
       "id": 44,
       "options": {
@@ -1963,7 +1989,7 @@
         "h": 11,
         "w": 5,
         "x": 19,
-        "y": 36
+        "y": 38
       },
       "id": 64,
       "options": {
@@ -2033,7 +2059,7 @@
         "h": 2,
         "w": 24,
         "x": 0,
-        "y": 47
+        "y": 49
       },
       "id": 65,
       "options": {
@@ -2201,7 +2227,7 @@
         "h": 10,
         "w": 7,
         "x": 0,
-        "y": 49
+        "y": 51
       },
       "id": 48,
       "options": {
@@ -2402,7 +2428,7 @@
         "h": 10,
         "w": 7,
         "x": 7,
-        "y": 49
+        "y": 51
       },
       "id": 49,
       "options": {
@@ -2603,7 +2629,7 @@
         "h": 10,
         "w": 6,
         "x": 14,
-        "y": 49
+        "y": 51
       },
       "id": 50,
       "options": {
@@ -2681,7 +2707,7 @@
         "h": 13,
         "w": 4,
         "x": 20,
-        "y": 49
+        "y": 51
       },
       "id": 13,
       "options": {
@@ -2733,7 +2759,7 @@
           }
         }
       ],
-      "title": "Error Distribution",
+      "title": "Error Distribution - Detail",
       "type": "piechart"
     },
     {
@@ -2887,7 +2913,7 @@
         "h": 10,
         "w": 7,
         "x": 0,
-        "y": 59
+        "y": 61
       },
       "id": 51,
       "options": {
@@ -3088,7 +3114,7 @@
         "h": 10,
         "w": 7,
         "x": 7,
-        "y": 59
+        "y": 61
       },
       "id": 45,
       "options": {
@@ -3282,6 +3308,30 @@
               "options": "Base Station"
             },
             "properties": []
+          },
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "SwMI Disconnections"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
           }
         ]
       },
@@ -3289,7 +3339,7 @@
         "h": 10,
         "w": 6,
         "x": 14,
-        "y": 59
+        "y": 61
       },
       "id": 52,
       "options": {
@@ -3349,7 +3399,7 @@
         "h": 10,
         "w": 4,
         "x": 20,
-        "y": 62
+        "y": 64
       },
       "id": 8,
       "options": {
@@ -3533,7 +3583,7 @@
         "h": 10,
         "w": 7,
         "x": 0,
-        "y": 69
+        "y": 71
       },
       "id": 53,
       "options": {
@@ -3734,7 +3784,7 @@
         "h": 10,
         "w": 7,
         "x": 7,
-        "y": 69
+        "y": 71
       },
       "id": 54,
       "options": {
@@ -3936,7 +3986,7 @@
         "h": 10,
         "w": 6,
         "x": 14,
-        "y": 69
+        "y": 71
       },
       "id": 55,
       "options": {
@@ -4038,7 +4088,7 @@
         "h": 14,
         "w": 4,
         "x": 20,
-        "y": 72
+        "y": 74
       },
       "id": 24,
       "options": {
@@ -4243,7 +4293,7 @@
         "h": 10,
         "w": 7,
         "x": 0,
-        "y": 79
+        "y": 81
       },
       "id": 56,
       "options": {
@@ -4445,7 +4495,7 @@
         "h": 10,
         "w": 6,
         "x": 7,
-        "y": 79
+        "y": 81
       },
       "id": 57,
       "options": {
@@ -4647,7 +4697,7 @@
         "h": 10,
         "w": 6,
         "x": 14,
-        "y": 79
+        "y": 81
       },
       "id": 58,
       "options": {
@@ -4739,7 +4789,7 @@
         "h": 13,
         "w": 4,
         "x": 20,
-        "y": 86
+        "y": 88
       },
       "id": 18,
       "options": {
@@ -4939,7 +4989,7 @@
         "h": 10,
         "w": 7,
         "x": 0,
-        "y": 89
+        "y": 91
       },
       "id": 59,
       "options": {
@@ -5141,7 +5191,7 @@
         "h": 10,
         "w": 7,
         "x": 7,
-        "y": 89
+        "y": 91
       },
       "id": 60,
       "options": {
@@ -5343,7 +5393,7 @@
         "h": 10,
         "w": 6,
         "x": 14,
-        "y": 89
+        "y": 91
       },
       "id": 61,
       "options": {
@@ -5402,7 +5452,7 @@
         "h": 2,
         "w": 24,
         "x": 0,
-        "y": 99
+        "y": 101
       },
       "id": 63,
       "options": {
@@ -5536,7 +5586,7 @@
         "h": 9,
         "w": 7,
         "x": 0,
-        "y": 101
+        "y": 103
       },
       "id": 21,
       "options": {
@@ -5656,6 +5706,30 @@
               "options": "Total System Errors"
             },
             "properties": []
+          },
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "Invalid Caller SSI"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
           }
         ]
       },
@@ -5663,7 +5737,7 @@
         "h": 9,
         "w": 17,
         "x": 7,
-        "y": 101
+        "y": 103
       },
       "id": 9,
       "options": {
@@ -5725,5 +5799,5 @@
   "timezone": "browser",
   "title": "NY Transport Dashboard",
   "uid": "fc054eb6-69ab-461d-a315-b10354622963",
-  "version": 77
+  "version": 78
 }
