@@ -22,6 +22,32 @@
   "links": [],
   "panels": [
     {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 62,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "# System Overview\r\n---",
+        "mode": "markdown"
+      },
+      "pluginVersion": "12.2.0-16711121739",
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
       "datasource": {
         "type": "grafana-postgresql-datasource",
         "uid": "eeu1dgjr0unswf"
@@ -49,10 +75,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 10,
+        "h": 7,
+        "w": 11,
         "x": 0,
-        "y": 0
+        "y": 2
       },
       "id": 15,
       "options": {
@@ -131,10 +157,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 3,
-        "x": 10,
-        "y": 0
+        "h": 7,
+        "w": 4,
+        "x": 11,
+        "y": 2
       },
       "id": 5,
       "options": {
@@ -186,92 +212,6 @@
         "type": "grafana-postgresql-datasource",
         "uid": "eeu1dgjr0unswf"
       },
-      "description": "Counts only unique values (VOIP, SBS. Not SBS-61, SBS-60,...) and excludes records with missing location data",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "decimals": 0,
-          "fieldMinMax": false,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 70
-              }
-            ]
-          },
-          "unit": "Bases"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 13,
-        "y": 0
-      },
-      "id": 36,
-      "options": {
-        "colorMode": "background",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.2.0-16711121739",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT \r\n    COUNT(DISTINCT SUBSTRING(source_location FROM 1 FOR 10)) as \"Active Bases\"\r\nFROM call_records\r\nWHERE source_location IS NOT NULL;",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Total Active Base Stations",
-      "transparent": true,
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "eeu1dgjr0unswf"
-      },
       "description": "This is a percentage based on success rate. Based on disconnection cause \"001 - User requested disconnection\"\n\n(in other words, success rate based on such cause)",
       "fieldConfig": {
         "defaults": {
@@ -300,10 +240,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 3,
-        "x": 17,
-        "y": 0
+        "h": 7,
+        "w": 4,
+        "x": 15,
+        "y": 2
       },
       "id": 2,
       "options": {
@@ -355,16 +295,15 @@
         "type": "grafana-postgresql-datasource",
         "uid": "eeu1dgjr0unswf"
       },
-      "description": "count of disconection cause timeout interference events with hypotetical tresholds in 10k and 20k",
+      "description": "Counts only unique values (VOIP, SBS. Not SBS-61, SBS-60,...) and excludes records with missing location data",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
           "decimals": 0,
+          "fieldMinMax": false,
           "mappings": [],
-          "max": 20000,
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -373,33 +312,32 @@
                 "value": 0
               },
               {
-                "color": "#EAB839",
-                "value": 10000
-              },
-              {
                 "color": "red",
-                "value": 20000
+                "value": 70
               }
             ]
-          }
+          },
+          "unit": "Bases"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 20,
-        "y": 0
+        "h": 5,
+        "w": 3,
+        "x": 19,
+        "y": 2
       },
-      "id": 4,
+      "id": 36,
       "options": {
         "colorMode": "background",
-        "graphMode": "area",
-        "justifyMode": "center",
+        "graphMode": "none",
+        "justifyMode": "auto",
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -413,7 +351,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \r\n    COUNT(*) as value -- counts all records that match timeout criteria\r\nFROM call_records -- from the main call_records table\r\nWHERE disconnection_cause LIKE '%timeout%' -- filters for disconnection causes containing 'timeout'\r\n    OR disconnection_cause LIKE '%timer%'; -- or disconnection causes containing 'timer'\r\n-- Counts calls that ended due to timeout or timer-related issues (interference indicators)\r\n",
+          "rawSql": "SELECT \r\n    COUNT(DISTINCT SUBSTRING(source_location FROM 1 FOR 10)) as \"Active Bases\"\r\nFROM call_records\r\nWHERE source_location IS NOT NULL;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -434,8 +372,7 @@
           }
         }
       ],
-      "title": "Interference Events",
-      "transparent": true,
+      "title": "Total Active Base Stations",
       "type": "stat"
     },
     {
@@ -453,7 +390,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "text",
+                "color": "#4f4f4f",
                 "value": 0
               }
             ]
@@ -462,14 +399,14 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 2,
-        "w": 4,
-        "x": 20,
-        "y": 3
+        "h": 7,
+        "w": 2,
+        "x": 22,
+        "y": 2
       },
       "id": 1,
       "options": {
-        "colorMode": "background_solid",
+        "colorMode": "none",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -517,7 +454,6 @@
         }
       ],
       "title": "Total Call Records",
-      "transparent": true,
       "type": "stat"
     },
     {
@@ -525,98 +461,16 @@
         "type": "grafana-postgresql-datasource",
         "uid": "eeu1dgjr0unswf"
       },
-      "description": "Based on calls that ended normally (user hung up) creates a percentage of \"good\" call endings.\n\n- GOOD (≥80%): Most calls ending normally, system healthy\n\n- ACCEPTABLE (50-79%): Some technical issues, monitor closely\n\n- NEEDS_ATTENTION (<50%): Major problems, immediate action required",
+      "description": "count of disconection cause timeout interference events with hypotetical tresholds in 10k and 20k",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
+          "decimals": 0,
           "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "semi-dark-red",
-                "value": 0
-              },
-              {
-                "color": "yellow",
-                "value": 79
-              },
-              {
-                "color": "blue",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 13,
-        "y": 4
-      },
-      "id": 37,
-      "options": {
-        "colorMode": "background_solid",
-        "graphMode": "none",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [],
-          "fields": "/.*/",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.2.0-16711121739",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT \r\n    CASE \r\n        WHEN (COUNT(*) FILTER (WHERE disconnection_cause = '001 - User requested disconnection') * 100.0 / NULLIF(COUNT(*), 0)) >= 80 THEN 'GOOD'\r\n        WHEN (COUNT(*) FILTER (WHERE disconnection_cause = '001 - User requested disconnection') * 100.0 / NULLIF(COUNT(*), 0)) >= 50 THEN 'ACCEPTABLE'\r\n        ELSE 'NEEDS_ATTENTION'\r\n    END as \"System Status\"\r\nFROM call_records;\r\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Current System Status",
-      "transparent": true,
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "eeu1dgjr0unswf"
-      },
-      "description": "Count of critical system failures and errors with tresholds in 15 and 30 as max.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
+          "max": 20000,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -626,11 +480,11 @@
               },
               {
                 "color": "#EAB839",
-                "value": 15
+                "value": 10000
               },
               {
                 "color": "red",
-                "value": 30
+                "value": 20000
               }
             ]
           }
@@ -638,12 +492,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 20,
-        "y": 5
+        "h": 2,
+        "w": 3,
+        "x": 19,
+        "y": 7
       },
-      "id": 3,
+      "id": 4,
       "options": {
         "colorMode": "background",
         "graphMode": "area",
@@ -651,9 +505,7 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": [],
           "fields": "",
           "values": false
         },
@@ -667,7 +519,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT COUNT(*) as value \r\nFROM call_records \r\nWHERE disconnection_cause IN ('034 - Error in SBS', '016 - Unknown TETRA identity', '019 - Call restoration of the other user failed'); -- Counts only calls that ended with specific critical error types\r\n",
+          "rawSql": "SELECT \r\n    COUNT(*) as value -- counts all records that match timeout criteria\r\nFROM call_records -- from the main call_records table\r\nWHERE disconnection_cause LIKE '%timeout%' -- filters for disconnection causes containing 'timeout'\r\n    OR disconnection_cause LIKE '%timer%'; -- or disconnection causes containing 'timer'\r\n-- Counts calls that ended due to timeout or timer-related issues (interference indicators)\r\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -688,329 +540,34 @@
           }
         }
       ],
-      "title": "Critical Failures Count",
-      "transparent": true,
+      "title": "Time out Events",
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "eeu1dgjr0unswf"
-      },
-      "description": "Total Calls, Success Rate, Successful vs Failed calls, Type of error...\n\n- Main metrics with opacity:\n1. Total calls\n2. Successful Calls\n3. Failed Calls\n4. Active Bases",
       "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "Call Count",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "fieldMinMax": false,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Total Calls"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "mode": "fixed"
-                }
-              },
-              {
-                "id": "custom.fillOpacity",
-                "value": 13
-              },
-              {
-                "id": "custom.gradientMode",
-                "value": "opacity"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Successful Calls"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "light-green",
-                  "mode": "fixed"
-                }
-              },
-              {
-                "id": "custom.fillOpacity",
-                "value": 90
-              },
-              {
-                "id": "custom.gradientMode",
-                "value": "opacity"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Disconnected Calls"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-red",
-                  "mode": "fixed"
-                }
-              },
-              {
-                "id": "custom.fillOpacity",
-                "value": 47
-              },
-              {
-                "id": "custom.gradientMode",
-                "value": "opacity"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Success Rate %"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-green",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "SBS Errors"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "super-light-yellow",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "TETRA Identity Errors"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "yellow",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "System Errors Total"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "red",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Timeout Failures"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "mode": "palette-classic"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Cell Reselection Events"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-yellow",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Active Bases"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "super-light-orange",
-                  "mode": "fixed"
-                }
-              },
-              {
-                "id": "custom.gradientMode",
-                "value": "hue"
-              },
-              {
-                "id": "custom.fillOpacity",
-                "value": 10
-              }
-            ]
-          },
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "Cell Reselection Events"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "defaults": {},
+        "overrides": []
       },
       "gridPos": {
-        "h": 12,
+        "h": 2,
         "w": 24,
         "x": 0,
-        "y": 8
+        "y": 9
       },
-      "id": 44,
+      "id": 66,
       "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "right",
-          "showLegend": true
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
         },
-        "timezone": [
-          "America/Bogota"
-        ],
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
+        "content": "---",
+        "mode": "markdown"
       },
       "pluginVersion": "12.2.0-16711121739",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "-- UNIFIED TIME SERIES - Comprehensive System Failure Analytics\r\nSELECT \r\n    DATE_TRUNC('hour', date_time) as time,\r\n    COUNT(*) as \"Total Calls\",\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '001 - User requested disconnection') as \"Successful Calls\",\r\n    COUNT(*) FILTER (WHERE disconnection_cause != '001 - User requested disconnection') as \"Disconnected Calls\",\r\n    ROUND((COUNT(*) FILTER (WHERE disconnection_cause = '001 - User requested disconnection') * 100.0 / NULLIF(COUNT(*), 0))::numeric, 2) as \"Success Rate %\",\r\n    \r\n    -- Specific Error Types (from Query 2)\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '034 - Error in SBS') as \"SBS Errors\",\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '016 - Unknown TETRA identity') as \"TETRA Identity Errors\",\r\n    \r\n    -- Broader Error Categories (from Query 1)\r\n    COUNT(*) FILTER (WHERE disconnection_cause LIKE '%SBS%' OR disconnection_cause LIKE '%Error%') as \"System Errors Total\",\r\n    COUNT(*) FILTER (WHERE disconnection_cause LIKE '%timeout%' OR disconnection_cause LIKE '%timer%') as \"Timeouts\",\r\n    \r\n    -- Network Events\r\n    COUNT(*) FILTER (WHERE cell_reselection = 'Yes') as \"Cell Reselection Events\",\r\n    \r\n    -- Infrastructure Metrics (from Query 2)\r\n    COUNT(DISTINCT SUBSTRING(source_location FROM 1 FOR 10)) as \"Active Bases\"\r\n    \r\nFROM call_records \r\nWHERE date_time IS NOT NULL\r\nGROUP BY DATE_TRUNC('hour', date_time)\r\nORDER BY time;",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "System Failure Analytics",
+      "title": "",
       "transparent": true,
-      "type": "timeseries"
+      "type": "text"
     },
     {
       "datasource": {
@@ -1021,7 +578,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "blue",
+            "fixedColor": "#57f27f52",
             "mode": "fixed"
           },
           "custom": {
@@ -1071,7 +628,7 @@
         "h": 25,
         "w": 4,
         "x": 0,
-        "y": 20
+        "y": 11
       },
       "id": 12,
       "options": {
@@ -1132,6 +689,7 @@
         }
       ],
       "title": "Average Call Duration By Server",
+      "transparent": true,
       "type": "xychart"
     },
     {
@@ -1139,107 +697,21 @@
         "type": "grafana-postgresql-datasource",
         "uid": "eeu1dgjr0unswf"
       },
+      "description": "Compilates all source_locations and develops multiple analisis\n\n- Health Score: the less % = the less # of errors = the better health\n- Occupancy: based on max amount of calls allowed, averages ocupancy\n- Maintenance errors: counts errors where restoration, 014, preemption, invalid%ssi are included (except for 001,013,033)\n- Avg call duration: Average call duration in seconds\n- Mantinance Status: counting all errors except 001,033,013 will give a sentence value (considering hypothetical thresholds of error counting)\n\n---\nSample Data",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 16,
-        "w": 9,
-        "x": 4,
-        "y": 20
-      },
-      "id": 30,
-      "options": {
-        "displayMode": "lcd",
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "maxVizHeight": 300,
-        "minVizHeight": 0,
-        "minVizWidth": 8,
-        "namePlacement": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": true
-        },
-        "showUnfilled": true,
-        "sizing": "auto",
-        "valueMode": "text"
-      },
-      "pluginVersion": "12.2.0-16711121739",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\r\n    SUBSTRING(source_location FROM 1 FOR 15) as \"Location\",\r\n    ROUND(\r\n        (COUNT(CASE WHEN disconnection_cause NOT IN ('001 - User requested disconnection') THEN 1 END) * 100.0 / \r\n         NULLIF(COUNT(*), 0))::numeric, \r\n        1\r\n    ) as \"Failure Rate %\"\r\nFROM call_records\r\nWHERE source_location IS NOT NULL \r\n    AND TRIM(source_location) != ''\r\nGROUP BY SUBSTRING(source_location FROM 1 FOR 15)\r\nHAVING COUNT(*) >= 20\r\nORDER BY \"Failure Rate %\" DESC;",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Failure Rate by Location",
-      "type": "bargauge"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "eeu1dgjr0unswf"
-      },
-      "description": "-- 📊 OVERVIEW: Panel Type: Table | Description: Interference hotspots by location with timeout analysis | Unit: Count and Percent | Decimals: 2\n-- 🎯 SETTINGS: Min/Max Values: None as it valuates all | Pagination: 15 rows | Thresholds: 20 / 80 / for Timeout Rate % | Value mapping: None\n-- 💡 BEST PRACTICE: Use gradient colors for rate columns, enable row selection, add search box, set conditional formatting\n",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
+            "mode": "continuous-GrYlRd"
           },
           "custom": {
             "align": "auto",
             "cellOptions": {
               "type": "auto"
             },
+            "filterable": true,
             "inspect": false
           },
+          "fieldMinMax": false,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -1247,27 +719,167 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Controller"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 96
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Location"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 105
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Total Calls"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 68
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "applyToRow": false,
+                  "mode": "gradient",
+                  "type": "color-background",
+                  "wrapText": false
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Health Score %"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 702
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "lcd",
+                  "type": "gauge",
+                  "valueDisplayMode": "color"
+                }
+              },
+              {
+                "id": "min"
+              },
+              {
+                "id": "max",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Occupancy (calls/day)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 186
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "max",
+                "value": 100
+              },
+              {
+                "id": "min",
+                "value": 0
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Maintenance Errors"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 176
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Error Calls"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 128
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Avg Call Duration"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 160
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 12,
-        "w": 5,
-        "x": 13,
-        "y": 20
+        "h": 13,
+        "w": 15,
+        "x": 4,
+        "y": 11
       },
-      "id": 11,
+      "id": 34,
       "options": {
         "cellHeight": "sm",
         "footer": {
           "countRows": false,
+          "enablePagination": false,
           "fields": "",
           "reducer": [
             "sum"
@@ -1275,12 +887,7 @@
           "show": false
         },
         "showHeader": true,
-        "sortBy": [
-          {
-            "desc": false,
-            "displayName": "Speech Timeouts"
-          }
-        ]
+        "sortBy": []
       },
       "pluginVersion": "12.2.0-16711121739",
       "targets": [
@@ -1288,7 +895,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \r\n    source_location as \"Location\", -- displays the source location of calls\r\n    COUNT(*) as \"Total Calls\", -- counts total calls from each location\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '033 - Speech inactivity timeout') as \"Speech Timeouts\", -- counts speech timeout incidents per location\r\n    COUNT(*) FILTER (WHERE cell_reselection = 'Yes') as \"Cell Reselections\", -- counts cell reselection events per location\r\n    ROUND((COUNT(*) FILTER (WHERE disconnection_cause LIKE '%timeout%') * 100.0 / COUNT(*))::numeric, 2) as \"Timeout Rate %\" -- calculates timeout percentage for each location\r\nFROM call_records -- from the main call_records table\r\nWHERE source_location IS NOT NULL -- only includes records with valid location data\r\nGROUP BY source_location -- groups results by location\r\nHAVING COUNT(*) > 50 -- only includes locations with more than 50 calls for statistical relevance\r\nORDER BY \"Timeout Rate %\" DESC -- sorts by timeout rate, showing worst locations first\r\nLIMIT 15; -- limits to top 15 problematic locations\r\n-- Identifies locations with highest interference activity by analyzing timeout rates and cell reselections\r\n",
+          "rawSql": "SELECT\r\n    network_controller as \"Controller\",\r\n    SUBSTRING(source_location FROM 1 FOR 8) as \"Location\",\r\n    COUNT(*) as \"Total Calls\",\r\n    \r\n   -- Health Score: High % = More errors (bad health), Low % = Fewer errors (good health)\r\n    ROUND(\r\n        CASE \r\n            WHEN COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) <= 15 THEN 5.0\r\n            ELSE LEAST(\r\n                5.0 + (LN(COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) / 15.0) * 20.0),\r\n                99.0\r\n            )\r\n        END\r\n    , 2) as \"Health Score %\",\r\n     \r\n    -- Occupancy: Based on calls per day with 1000 call limit (percentage of capacity)\r\n    ROUND((COUNT(*) / NULLIF(EXTRACT(DAY FROM (MAX(date_time) - MIN(date_time))) + 1, 0))::numeric, 0) as \"Occupancy (calls/day)\",\r\n\r\n    -- Maintenance-related errors count\r\n    COUNT(*) FILTER (WHERE \r\n        disconnection_cause LIKE '%014%' OR\r\n        disconnection_cause ILIKE '%restoration%' OR \r\n        disconnection_cause ILIKE '%preemption%' OR \r\n        disconnection_cause ILIKE '%invalid%ssi%'\r\n    ) as \"Maintenance Errors\",\r\n    \r\n    -- Total error calls (excluding normal disconnections)\r\n    COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) as \"Error Calls\",\r\n    \r\n    -- Average call duration\r\n    ROUND(AVG(duration_secs), 1) as \"Avg Call Duration\",\r\n    \r\n-- Maintenance Status with thresholds based on actual error counts, not percentages\r\nCASE \r\n    -- URGENT: Very high absolute error count (regardless of percentage)\r\n    WHEN COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) >= 500\r\n         OR COUNT(*) FILTER (WHERE disconnection_cause LIKE '%014%' OR disconnection_cause ILIKE '%restoration%' OR disconnection_cause ILIKE '%preemption%' OR disconnection_cause ILIKE '%invalid%ssi%') >= 15\r\n         THEN 'URGENT_MAINTENANCE'\r\n    -- SCHEDULED: High absolute error count\r\n    WHEN COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) >= 200\r\n         OR COUNT(*) FILTER (WHERE disconnection_cause LIKE '%014%' OR disconnection_cause ILIKE '%restoration%' OR disconnection_cause ILIKE '%preemption%' OR disconnection_cause ILIKE '%invalid%ssi%') >= 8\r\n         THEN 'SCHEDULED_MAINTENANCE'\r\n    -- MONITORING: Moderate absolute error count\r\n    WHEN COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) >= 100\r\n         OR COUNT(*) FILTER (WHERE disconnection_cause LIKE '%014%' OR disconnection_cause ILIKE '%restoration%' OR disconnection_cause ILIKE '%preemption%' OR disconnection_cause ILIKE '%invalid%ssi%') >= 3\r\n         THEN 'MONITORING'\r\n    ELSE 'HEALTHY'\r\nEND as \"Maintenance Status\"\r\n\r\nFROM call_records\r\nWHERE network_controller IS NOT NULL\r\n    AND source_location IS NOT NULL\r\n    AND date_time IS NOT NULL\r\nGROUP BY \r\n    network_controller,\r\n    SUBSTRING(source_location FROM 1 FOR 8)\r\nHAVING COUNT(*) >= 10\r\nORDER BY \r\n    (COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) * 100.0 / NULLIF(COUNT(*), 0)) DESC;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1309,7 +916,8 @@
           }
         }
       ],
-      "title": " Location-Based Interference Hotspots",
+      "title": "Source Location Maintenance",
+      "transparent": true,
       "type": "table"
     },
     {
@@ -1317,11 +925,12 @@
         "type": "grafana-postgresql-datasource",
         "uid": "eeu1dgjr0unswf"
       },
-      "description": "-- 📊 OVERV IEW: Panel Type: Pie chart | Description: Distribution of different error codes in the system | Unit: Error Count | Decimals: 0\n-- 🎯 SETTINGS: Min/Max Values: None as it valuates all | Pagination: None | Thresholds: None | Value mapping: None\n-- 💡 BEST PRACTICE: Use distinct colors, show percentages, limit to top 10 categories, enable legend\n",
+      "description": "Counts all errors, categorizes them and shows their concurrency through the system",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "fixedColor": "#f66e76",
+            "mode": "shades"
           },
           "custom": {
             "hideFrom": {
@@ -1335,10 +944,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 16,
-        "w": 6,
-        "x": 18,
-        "y": 20
+        "h": 12,
+        "w": 5,
+        "x": 19,
+        "y": 11
       },
       "id": 25,
       "options": {
@@ -1390,6 +999,90 @@
       ],
       "title": "Error Code Distribution",
       "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "eeu1dgjr0unswf"
+      },
+      "description": "Based on calls that ended normally (user hung up) creates a percentage of \"good\" call endings.\n\n- GOOD (≥80%): Most calls ending normally, system healthy\n\n- ACCEPTABLE (50-79%): Some technical issues, monitor closely\n\n- NEEDS_ATTENTION (<50%): Major problems, immediate action required",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-red",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 79
+              },
+              {
+                "color": "blue",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 19,
+        "y": 23
+      },
+      "id": 37,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16711121739",
+      "targets": [
+        {
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \r\n    CASE \r\n        WHEN (COUNT(*) FILTER (WHERE disconnection_cause = '001 - User requested disconnection') * 100.0 / NULLIF(COUNT(*), 0)) >= 80 THEN 'GOOD'\r\n        WHEN (COUNT(*) FILTER (WHERE disconnection_cause = '001 - User requested disconnection') * 100.0 / NULLIF(COUNT(*), 0)) >= 50 THEN 'ACCEPTABLE'\r\n        ELSE 'NEEDS_ATTENTION'\r\n    END as \"System Status\"\r\nFROM call_records;\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Current System Status",
+      "type": "stat"
     },
     {
       "datasource": {
@@ -1469,10 +1162,10 @@
         ]
       },
       "gridPos": {
-        "h": 4,
-        "w": 5,
-        "x": 13,
-        "y": 32
+        "h": 12,
+        "w": 7,
+        "x": 4,
+        "y": 24
       },
       "id": 14,
       "options": {
@@ -1483,8 +1176,10 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Name",
+          "sortDesc": false
         },
         "orientation": "horizontal",
         "showValue": "auto",
@@ -1526,6 +1221,7 @@
         }
       ],
       "title": "ISSI vs VOIP Interference Comparison",
+      "transparent": true,
       "type": "barchart"
     },
     {
@@ -1533,6 +1229,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "eeu1dgjr0unswf"
       },
+      "description": "Counts the number of speech timeouts and cell reselections by location\n\n- Hypothetical limits of 1000 in Timeouts\n- and 500 in Cell Reselections",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1552,10 +1249,6 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -1564,60 +1257,121 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Failure Cause"
+              "options": "Total Calls"
             },
             "properties": [
               {
                 "id": "custom.width",
-                "value": 445
+                "value": 99
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "% of Failures"
+              "options": "Speech Timeouts"
             },
             "properties": [
               {
                 "id": "custom.width",
-                "value": 105
+                "value": 168
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "gradient",
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 250
+                    },
+                    {
+                      "color": "orange",
+                      "value": 500
+                    },
+                    {
+                      "color": "red",
+                      "value": 1000
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.align",
+                "value": "center"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "Avg Duration"
+              "options": "Cell Reselections"
             },
             "properties": [
               {
                 "id": "custom.width",
-                "value": 105
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Occurrences"
-            },
-            "properties": [
+                "value": 151
+              },
               {
-                "id": "custom.width",
-                "value": 116
+                "id": "custom.cellOptions",
+                "value": {
+                  "applyToRow": false,
+                  "mode": "gradient",
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 115
+                    },
+                    {
+                      "color": "orange",
+                      "value": 250
+                    },
+                    {
+                      "color": "red",
+                      "value": 500
+                    }
+                  ]
+                }
               }
             ]
           }
         ]
       },
       "gridPos": {
-        "h": 9,
-        "w": 14,
-        "x": 4,
-        "y": 36
+        "h": 12,
+        "w": 8,
+        "x": 11,
+        "y": 24
       },
-      "id": 42,
+      "id": 11,
       "options": {
         "cellHeight": "sm",
         "footer": {
@@ -1632,7 +1386,7 @@
         "sortBy": [
           {
             "desc": true,
-            "displayName": "% of Failures"
+            "displayName": "Speech Timeouts"
           }
         ]
       },
@@ -1642,7 +1396,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \r\n    disconnection_cause as \"Failure Cause\",\r\n    COUNT(*) as \"Occurrences\",\r\n    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM call_records WHERE disconnection_cause != '001 - User requested disconnection'))::numeric, 2) as \"% of Failures\",\r\n    ROUND(AVG(duration_secs), 1) as \"Avg Duration\",\r\n    COUNT(*) FILTER (WHERE cell_reselection = 'Yes') as \"With Cell Reselection\"\r\nFROM call_records\r\nWHERE disconnection_cause != '001 - User requested disconnection'\r\nGROUP BY disconnection_cause\r\nORDER BY COUNT(*) DESC;",
+          "rawSql": "SELECT \r\n    source_location as \"Location\", -- displays the source location of calls\r\n    COUNT(*) as \"Total Calls\", -- counts total calls from each location\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '033 - Speech inactivity timeout') as \"Speech Timeouts\", -- counts speech timeout incidents per location\r\n    COUNT(*) FILTER (WHERE cell_reselection = 'Yes') as \"Cell Reselections\", -- counts cell reselection events per location\r\n    ROUND((COUNT(*) FILTER (WHERE disconnection_cause LIKE '%timeout%') * 100.0 / COUNT(*))::numeric, 2) as \"Timeout Rate %\" -- calculates timeout percentage for each location\r\nFROM call_records -- from the main call_records table\r\nWHERE source_location IS NOT NULL -- only includes records with valid location data\r\nGROUP BY source_location -- groups results by location\r\nHAVING COUNT(*) > 50 -- only includes locations with more than 50 calls for statistical relevance\r\nORDER BY \"Timeout Rate %\" DESC -- sorts by timeout rate, showing worst locations first\r\nLIMIT 15; -- limits to top 15 problematic locations\r\n-- Identifies locations with highest interference activity by analyzing timeout rates and cell reselections\r\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1663,7 +1417,8 @@
           }
         }
       ],
-      "title": "Disconection Cause Compilation",
+      "title": " Location-Based Timeouts",
+      "transparent": true,
       "type": "table"
     },
     {
@@ -1671,12 +1426,12 @@
         "type": "grafana-postgresql-datasource",
         "uid": "eeu1dgjr0unswf"
       },
-      "description": "-- 📊 OVERVIEW: Panel Type: Bar chart | Description: Distribution of call volumes across days of the week | Unit: Call Count | Decimals: 0\n-- 🎯 SETTINGS: Min/Max Values: 0 and auto-max | Orientation: Vertical | Show value: Yes | Bar width: 0.8\n-- 💡 BEST PRACTICE: Use consistent colors, add day labels, enable value display on bars\n",
+      "description": "Call volume through the days\n\n- Counts Failed calls, Successful and Total amount",
       "fieldConfig": {
         "defaults": {
           "color": {
             "fixedColor": "red",
-            "mode": "continuous-BlYlRd"
+            "mode": "continuous-GrYlRd"
           },
           "custom": {
             "axisBorderShow": false,
@@ -1706,21 +1461,42 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "Total Calls"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 9,
-        "w": 6,
-        "x": 18,
-        "y": 36
+        "w": 5,
+        "x": 19,
+        "y": 27
       },
       "id": 26,
       "options": {
@@ -1776,6 +1552,479 @@
       "type": "barchart"
     },
     {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "eeu1dgjr0unswf"
+      },
+      "description": "Total Calls, Success Rate, Successful vs Failed calls, Type of error...\n\nMain metrics in Dots:\n1. Total calls\n2. Successful Calls\n3. Failed Calls\n4. Active Bases\n\nErrors count in Lines:\n1. SBS Errors\n2, TETRA Identity Errors\n3. Sysyem Errors Total\n\nTimeouts and Reselections in Dashes",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Call Count",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Total Calls"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#ffffff",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 24
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "opacity"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "never"
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    0,
+                    20
+                  ],
+                  "fill": "dot"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Successful Calls"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 90
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "opacity"
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    0,
+                    20
+                  ],
+                  "fill": "dot"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Disconnected Calls"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 47
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "opacity"
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    0,
+                    20
+                  ],
+                  "fill": "dot"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Success Rate %"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#4e4deb",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 69
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "opacity"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SBS Errors"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 9
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TETRA Identity Errors"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#ff8a30",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 10
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "System Errors Total"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#590811",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 100
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "none"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Timeouts"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 6
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    10
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cell Reselection Events"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#eefa2a",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    10
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 12
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Active Bases"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#7dffbd",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "hue"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 4
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    0,
+                    10
+                  ],
+                  "fill": "dot"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 19,
+        "x": 0,
+        "y": 36
+      },
+      "id": 44,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "timezone": [
+          "America/Bogota"
+        ],
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.2.0-16711121739",
+      "targets": [
+        {
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "-- UNIFIED TIME SERIES - Comprehensive System Failure Analytics\r\nSELECT \r\n    DATE_TRUNC('hour', date_time) as time,\r\n    COUNT(*) as \"Total Calls\",\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '001 - User requested disconnection') as \"Successful Calls\",\r\n    COUNT(*) FILTER (WHERE disconnection_cause != '001 - User requested disconnection') as \"Disconnected Calls\",\r\n    ROUND((COUNT(*) FILTER (WHERE disconnection_cause = '001 - User requested disconnection') * 100.0 / NULLIF(COUNT(*), 0))::numeric, 2) as \"Success Rate %\",\r\n    \r\n    -- Specific Error Types (from Query 2)\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '034 - Error in SBS') as \"SBS Errors\",\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '016 - Unknown TETRA identity') as \"TETRA Identity Errors\",\r\n    \r\n    -- Broader Error Categories (from Query 1)\r\n    COUNT(*) FILTER (WHERE disconnection_cause LIKE '%SBS%' OR disconnection_cause LIKE '%Error%') as \"System Errors Total\",\r\n    COUNT(*) FILTER (WHERE disconnection_cause LIKE '%timeout%' OR disconnection_cause LIKE '%timer%') as \"Timeouts\",\r\n    \r\n    -- Network Events\r\n    COUNT(*) FILTER (WHERE cell_reselection = 'Yes') as \"Cell Reselection Events\",\r\n    \r\n    -- Infrastructure Metrics (from Query 2)\r\n    COUNT(DISTINCT SUBSTRING(source_location FROM 1 FOR 10)) as \"Active Bases\"\r\n    \r\nFROM call_records \r\nWHERE date_time IS NOT NULL\r\nGROUP BY DATE_TRUNC('hour', date_time)\r\nORDER BY time;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "System Failure Analytics",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "eeu1dgjr0unswf"
+      },
+      "description": "Shows time from the browser you're in",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 5,
+        "x": 19,
+        "y": 36
+      },
+      "id": 64,
+      "options": {
+        "bgColor": "#3f5559",
+        "clockType": "12 hour",
+        "countdownSettings": {
+          "endCountdownTime": "2025-08-09T14:54:57-05:00",
+          "endText": "00:00:00",
+          "invalidValueText": "invalid value",
+          "noValueText": "no value found",
+          "queryCalculation": "last",
+          "source": "input"
+        },
+        "countupSettings": {
+          "beginCountupTime": "2025-08-09T14:54:57-05:00",
+          "beginText": "00:00:00",
+          "invalidValueText": "invalid value",
+          "noValueText": "no value found",
+          "queryCalculation": "last",
+          "source": "input"
+        },
+        "dateSettings": {
+          "dateFormat": "YYYY-MM-DD",
+          "fontSize": "20px",
+          "fontWeight": "normal",
+          "locale": "",
+          "showDate": true
+        },
+        "descriptionSettings": {
+          "descriptionText": "",
+          "fontSize": "40px",
+          "fontWeight": "normal",
+          "noValueText": "no description found",
+          "source": "none"
+        },
+        "fontMono": true,
+        "mode": "time",
+        "refresh": "sec",
+        "timeSettings": {
+          "fontSize": "65px",
+          "fontWeight": "bold"
+        },
+        "timezone": "",
+        "timezoneSettings": {
+          "fontSize": "17px",
+          "fontWeight": "normal",
+          "showTimezone": true,
+          "zoneFormat": "name"
+        }
+      },
+      "pluginVersion": "2.1.8",
+      "targets": [
+        {
+          "refId": "A"
+        }
+      ],
+      "title": "Time",
+      "type": "grafana-clock-panel"
+    },
+    {
+      "description": "The below stats are each base and their total amount of success and errors marked by lines\n\n- Lines = Total Calls and Types of Errors",
       "fieldConfig": {
         "defaults": {},
         "overrides": []
@@ -1784,9 +2033,9 @@
         "h": 2,
         "w": 24,
         "x": 0,
-        "y": 45
+        "y": 47
       },
-      "id": 62,
+      "id": 65,
       "options": {
         "code": {
           "language": "plaintext",
@@ -1952,7 +2201,7 @@
         "h": 10,
         "w": 7,
         "x": 0,
-        "y": 47
+        "y": 49
       },
       "id": 48,
       "options": {
@@ -2153,7 +2402,7 @@
         "h": 10,
         "w": 7,
         "x": 7,
-        "y": 47
+        "y": 49
       },
       "id": 49,
       "options": {
@@ -2354,7 +2603,7 @@
         "h": 10,
         "w": 6,
         "x": 14,
-        "y": 47
+        "y": 49
       },
       "id": 50,
       "options": {
@@ -2432,7 +2681,7 @@
         "h": 13,
         "w": 4,
         "x": 20,
-        "y": 47
+        "y": 49
       },
       "id": 13,
       "options": {
@@ -2638,7 +2887,7 @@
         "h": 10,
         "w": 7,
         "x": 0,
-        "y": 57
+        "y": 59
       },
       "id": 51,
       "options": {
@@ -2839,7 +3088,7 @@
         "h": 10,
         "w": 7,
         "x": 7,
-        "y": 57
+        "y": 59
       },
       "id": 45,
       "options": {
@@ -3040,7 +3289,7 @@
         "h": 10,
         "w": 6,
         "x": 14,
-        "y": 57
+        "y": 59
       },
       "id": 52,
       "options": {
@@ -3100,7 +3349,7 @@
         "h": 10,
         "w": 4,
         "x": 20,
-        "y": 60
+        "y": 62
       },
       "id": 8,
       "options": {
@@ -3284,7 +3533,7 @@
         "h": 10,
         "w": 7,
         "x": 0,
-        "y": 67
+        "y": 69
       },
       "id": 53,
       "options": {
@@ -3485,7 +3734,7 @@
         "h": 10,
         "w": 7,
         "x": 7,
-        "y": 67
+        "y": 69
       },
       "id": 54,
       "options": {
@@ -3687,7 +3936,7 @@
         "h": 10,
         "w": 6,
         "x": 14,
-        "y": 67
+        "y": 69
       },
       "id": 55,
       "options": {
@@ -3789,7 +4038,7 @@
         "h": 14,
         "w": 4,
         "x": 20,
-        "y": 70
+        "y": 72
       },
       "id": 24,
       "options": {
@@ -3994,7 +4243,7 @@
         "h": 10,
         "w": 7,
         "x": 0,
-        "y": 77
+        "y": 79
       },
       "id": 56,
       "options": {
@@ -4196,7 +4445,7 @@
         "h": 10,
         "w": 6,
         "x": 7,
-        "y": 77
+        "y": 79
       },
       "id": 57,
       "options": {
@@ -4398,7 +4647,7 @@
         "h": 10,
         "w": 6,
         "x": 14,
-        "y": 77
+        "y": 79
       },
       "id": 58,
       "options": {
@@ -4487,10 +4736,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 15,
+        "h": 13,
         "w": 4,
         "x": 20,
-        "y": 84
+        "y": 86
       },
       "id": 18,
       "options": {
@@ -4690,7 +4939,7 @@
         "h": 10,
         "w": 7,
         "x": 0,
-        "y": 87
+        "y": 89
       },
       "id": 59,
       "options": {
@@ -4892,7 +5141,7 @@
         "h": 10,
         "w": 7,
         "x": 7,
-        "y": 87
+        "y": 89
       },
       "id": 60,
       "options": {
@@ -5094,7 +5343,7 @@
         "h": 10,
         "w": 6,
         "x": 14,
-        "y": 87
+        "y": 89
       },
       "id": 61,
       "options": {
@@ -5169,234 +5418,6 @@
       "title": "",
       "transparent": true,
       "type": "text"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "eeu1dgjr0unswf"
-      },
-      "description": "Compilates all source_locations and develops multiple analisis\n\n- Health Score: the less % = the less # of errors = the better health\n- Occupancy: based on max amount of calls allowed, averages ocupancy\n- Maintenance errors: counts errors where restoration, 014, preemption, invalid%ssi are included (except for 001,013,033)\n- Avg call duration: Average call duration in seconds\n- Mantinance Status: counting all errors except 001,033,013 will give a sentence value\n\n---\nSample Data",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "continuous-GrYlRd"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "filterable": true,
-            "inspect": false
-          },
-          "fieldMinMax": false,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Controller"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 96
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Location"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 117
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Total Calls"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 96
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "applyToRow": false,
-                  "mode": "gradient",
-                  "type": "color-background",
-                  "wrapText": false
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Health Score %"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 952
-              },
-              {
-                "id": "unit",
-                "value": "percent"
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "mode": "lcd",
-                  "type": "gauge",
-                  "valueDisplayMode": "color"
-                }
-              },
-              {
-                "id": "min"
-              },
-              {
-                "id": "max",
-                "value": 100
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Occupancy (calls/day)"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 185
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "color-text"
-                }
-              },
-              {
-                "id": "max",
-                "value": 100
-              },
-              {
-                "id": "min",
-                "value": 0
-              },
-              {
-                "id": "unit",
-                "value": "percent"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Maintenance Errors"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 176
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Error Calls"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 128
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Avg Call Duration"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 160
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 101
-      },
-      "id": 34,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "enablePagination": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
-        "showHeader": true,
-        "sortBy": []
-      },
-      "pluginVersion": "12.2.0-16711121739",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\r\n    network_controller as \"Controller\",\r\n    SUBSTRING(source_location FROM 1 FOR 8) as \"Location\",\r\n    COUNT(*) as \"Total Calls\",\r\n    \r\n   -- Health Score: High % = More errors (bad health), Low % = Fewer errors (good health)\r\n    ROUND(\r\n        CASE \r\n            WHEN COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) <= 15 THEN 5.0\r\n            ELSE LEAST(\r\n                5.0 + (LN(COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) / 15.0) * 20.0),\r\n                99.0\r\n            )\r\n        END\r\n    , 2) as \"Health Score %\",\r\n     \r\n    -- Occupancy: Based on calls per day with 1000 call limit (percentage of capacity)\r\n    ROUND((COUNT(*) / NULLIF(EXTRACT(DAY FROM (MAX(date_time) - MIN(date_time))) + 1, 0))::numeric, 0) as \"Occupancy (calls/day)\",\r\n\r\n    -- Maintenance-related errors count\r\n    COUNT(*) FILTER (WHERE \r\n        disconnection_cause LIKE '%014%' OR\r\n        disconnection_cause ILIKE '%restoration%' OR \r\n        disconnection_cause ILIKE '%preemption%' OR \r\n        disconnection_cause ILIKE '%invalid%ssi%'\r\n    ) as \"Maintenance Errors\",\r\n    \r\n    -- Total error calls (excluding normal disconnections)\r\n    COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) as \"Error Calls\",\r\n    \r\n    -- Average call duration\r\n    ROUND(AVG(duration_secs), 1) as \"Avg Call Duration\",\r\n    \r\n    -- Maintenance Status with adjusted thresholds\r\n    CASE \r\n        WHEN (COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) * 100.0 / NULLIF(COUNT(*), 0)) >= 80 \r\n             OR (COUNT(*) / NULLIF(EXTRACT(DAY FROM (MAX(date_time) - MIN(date_time))) + 1, 0)) > 950\r\n             OR COUNT(*) FILTER (WHERE disconnection_cause LIKE '%014%' OR disconnection_cause ILIKE '%restoration%' OR disconnection_cause ILIKE '%preemption%' OR disconnection_cause ILIKE '%invalid%ssi%') >= 5\r\n             THEN 'URGENT_MAINTENANCE'\r\n        WHEN (COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) * 100.0 / NULLIF(COUNT(*), 0)) >= 50 \r\n             OR (COUNT(*) / NULLIF(EXTRACT(DAY FROM (MAX(date_time) - MIN(date_time))) + 1, 0)) > 800\r\n             OR COUNT(*) FILTER (WHERE disconnection_cause LIKE '%014%' OR disconnection_cause ILIKE '%restoration%' OR disconnection_cause ILIKE '%preemption%' OR disconnection_cause ILIKE '%invalid%ssi%') >= 2\r\n             THEN 'SCHEDULED_MAINTENANCE'\r\n        WHEN (COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) * 100.0 / NULLIF(COUNT(*), 0)) >= 20 \r\n             OR (COUNT(*) / NULLIF(EXTRACT(DAY FROM (MAX(date_time) - MIN(date_time))) + 1, 0)) > 600\r\n             OR COUNT(*) FILTER (WHERE disconnection_cause LIKE '%014%' OR disconnection_cause ILIKE '%restoration%' OR disconnection_cause ILIKE '%preemption%' OR disconnection_cause ILIKE '%invalid%ssi%') >= 1\r\n             THEN 'MONITORING'\r\n        ELSE 'HEALTHY'\r\n    END as \"Maintenance Status\"\r\n\r\nFROM call_records\r\nWHERE network_controller IS NOT NULL\r\n    AND source_location IS NOT NULL\r\n    AND date_time IS NOT NULL\r\nGROUP BY \r\n    network_controller,\r\n    SUBSTRING(source_location FROM 1 FOR 8)\r\nHAVING COUNT(*) >= 10\r\nORDER BY \r\n    (COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) * 100.0 / NULLIF(COUNT(*), 0)) DESC;",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Source Location Maintenance",
-      "transparent": true,
-      "type": "table"
     },
     {
       "datasource": {
@@ -5515,7 +5536,7 @@
         "h": 9,
         "w": 7,
         "x": 0,
-        "y": 109
+        "y": 101
       },
       "id": 21,
       "options": {
@@ -5642,7 +5663,7 @@
         "h": 9,
         "w": 17,
         "x": 7,
-        "y": 109
+        "y": 101
       },
       "id": 9,
       "options": {
@@ -5697,12 +5718,12 @@
     "list": []
   },
   "time": {
-    "from": "2025-02-27T05:00:00.000Z",
-    "to": "2025-03-04T04:59:59.000Z"
+    "from": "2025-02-27T22:23:13.173Z",
+    "to": "2025-03-04T00:47:56.590Z"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "NY Transport Dashboard",
   "uid": "fc054eb6-69ab-461d-a315-b10354622963",
-  "version": 65
+  "version": 77
 }
