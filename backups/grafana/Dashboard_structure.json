@@ -26,32 +26,25 @@
         "type": "grafana-postgresql-datasource",
         "uid": "eeu1dgjr0unswf"
       },
-      "description": "Based on total amount of calls made to each Source_Fleet in descendent order.\n- Only includes fleets with 20+ calls\n",
+      "description": "Based on total amount of calls made to each Source_Fleet counts the amount of errors/disconections happening for each base\n\n- Based on Calls per Base\n- Only excludes errors 001, 013, 033\n- The more Yellow-ish/White-ish the better, the more Redish the worse\n- 6000 Calls is the limit of errors per base\n",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "continuous-GrYlRd"
+            "mode": "continuous-YlRd"
           },
-          "decimals": 2,
           "mappings": [],
+          "max": 6000,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "#EAB839",
-                "value": 20
-              },
-              {
-                "color": "red",
-                "value": 40
               }
             ]
           },
-          "unit": "percent"
+          "unit": "short"
         },
         "overrides": []
       },
@@ -70,11 +63,12 @@
           "calcs": [
             "lastNotNull"
           ],
-          "fields": "",
+          "fields": "/^Error Calls$/",
+          "limit": 5,
           "values": true
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true,
+        "showThresholdMarkers": false,
         "sizing": "auto"
       },
       "pluginVersion": "12.2.0-16711121739",
@@ -83,7 +77,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \r\n    source_fleet as metric, -- groups by fleet identifier\r\n    COUNT(*) FILTER (WHERE disconnection_cause LIKE '%timeout%' OR cell_reselection = 'Yes') * 100.0 / NULLIF(COUNT(*), 0) as value -- calculates interference percentage (timeouts + reselections)\r\nFROM call_records -- from the main call_records table\r\nWHERE source_fleet IS NOT NULL -- only includes records with valid fleet data\r\n    AND source_fleet != '' -- and non-empty fleet values\r\nGROUP BY source_fleet -- groups results by fleet\r\nHAVING COUNT(*) > 20 -- only includes fleets with more than 20 calls for statistical relevance\r\nORDER BY value DESC; -- sorts by interference rate, showing worst fleets first\r\n-- Identifies fleets with highest interference rates by analyzing timeout and reselection patterns\r\n",
+          "rawSql": "SELECT\r\n    source_fleet AS \"Base\",\r\n    COUNT(*) AS \"Total Calls\",\r\n    COUNT(*) FILTER (\r\n        WHERE disconnection_cause NOT IN ('001', '013', '033')\r\n        AND disconnection_cause IS NOT NULL\r\n    ) AS \"Error Calls\"\r\nFROM call_records\r\nWHERE source_fleet IS NOT NULL\r\nGROUP BY source_fleet\r\nORDER BY \"Error Calls\" DESC;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -104,7 +98,7 @@
           }
         }
       ],
-      "title": "Fleet Interference Analysis",
+      "title": "Top 5 Bases With Most Interference",
       "transparent": true,
       "type": "gauge"
     },
@@ -113,14 +107,13 @@
         "type": "grafana-postgresql-datasource",
         "uid": "eeu1dgjr0unswf"
       },
-      "description": "Average network load in calls per hour based on the 6 days of data and with a 500 Limit\n\n- Total calls ÷ Total hours = Calls per hour to limit system's capacity (set to 500 as example)",
+      "description": "Average network load in calls per hour with a 500 Limit\n\n- Total calls ÷ Total hours = Calls per hour to limit system's capacity \n- Set to 500 calls per hour max as example",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "continuous-GrYlRd"
           },
-          "decimals": 2,
-          "fieldMinMax": false,
+          "decimals": 3,
           "mappings": [],
           "max": 500,
           "min": 0,
@@ -130,18 +123,10 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "#EAB839",
-                "value": 200
-              },
-              {
-                "color": "red",
-                "value": 500
               }
             ]
           },
-          "unit": "Call/hour"
+          "unit": "calls/hour"
         },
         "overrides": []
       },
@@ -946,6 +931,30 @@
                 "value": 10
               }
             ]
+          },
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "Cell Reselection Events"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
           }
         ]
       },
@@ -1008,11 +1017,12 @@
         "type": "grafana-postgresql-datasource",
         "uid": "eeu1dgjr0unswf"
       },
-      "description": "-- 📊 OVERVIEW: Panel Type: Heatmap | Description: Average call duration by hour and network type | Unit: Seconds | Decimals: 2\n-- 🎯 SETTINGS: Min/Max Values: None as it valuates all | Pagination: None | Thresholds: 30 / 120 / Green-Yellow-Red | Value mapping: None\n-- 💡 BEST PRACTICE: Use seconds unit, set bucket size to 1 hour, enable hover tooltip, normalize by row\n",
+      "description": "Based on the Server and the duration of the call creates a point.\n",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "fixedColor": "blue",
+            "mode": "fixed"
           },
           "custom": {
             "axisBorderShow": false,
@@ -1045,8 +1055,12 @@
                 "value": 0
               },
               {
+                "color": "#EAB839",
+                "value": 30
+              },
+              {
                 "color": "red",
-                "value": 80
+                "value": 120
               }
             ]
           }
@@ -1117,7 +1131,7 @@
           }
         }
       ],
-      "title": "Network Quality",
+      "title": "Average Call Duration By Server",
       "type": "xychart"
     },
     {
@@ -1382,20 +1396,37 @@
         "type": "grafana-postgresql-datasource",
         "uid": "eeu1dgjr0unswf"
       },
-      "description": "-- 📊 OVERVIEW: Panel Type: Table | Description: Technology comparison between ISSI and VOIP for interference analysis | Unit: Mixed | Decimals: 2\n-- 🎯 SETTINGS: Min/Max Values: None as it valuates all | Pagination: None | Thresholds: 30 / 60 / for Failure Rate % | Value mapping: None\n-- 💡 BEST PRACTICE: Use conditional formatting for failure rate, enable sorting, add percentage bars, highlight differences\n",
+      "description": "Counts all errors based on the source location column.",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "continuous-GrYlRd"
           },
           "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
             },
-            "inspect": false
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "line+area"
+            }
           },
+          "decimals": 0,
           "mappings": [],
+          "max": 100,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1404,13 +1435,38 @@
                 "value": 0
               },
               {
+                "color": "#EAB839",
+                "value": 25
+              },
+              {
+                "color": "orange",
+                "value": 50
+              },
+              {
                 "color": "red",
-                "value": 80
+                "value": 85
+              }
+            ]
+          },
+          "unit": "calls"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Total Calls"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#aac40f",
+                  "mode": "fixed"
+                }
               }
             ]
           }
-        },
-        "overrides": []
+        ]
       },
       "gridPos": {
         "h": 4,
@@ -1420,16 +1476,27 @@
       },
       "id": 14,
       "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.86,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
         },
-        "showHeader": true
+        "orientation": "horizontal",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        },
+        "xField": "Technology",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
       },
       "pluginVersion": "12.2.0-16711121739",
       "targets": [
@@ -1437,7 +1504,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \r\n    source_type as \"Technology\", -- displays the technology type (ISSI or VOIP)\r\n    COUNT(*) as \"Total Calls\", -- counts total calls per technology\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '033 - Speech inactivity timeout') as \"Speech Timeouts\", -- counts speech timeout incidents per technology\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '013 - Expiry of timer') as \"Timer Expiry\", -- counts timer expiration incidents per technology\r\n    COUNT(*) FILTER (WHERE cell_reselection = 'Yes') as \"Cell Reselections\", -- counts cell reselection events per technology\r\n    ROUND(AVG(duration_secs), 2) as \"Avg Duration\", -- calculates average call duration per technology\r\n    ROUND(COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001 - User requested disconnection')) * 100.0 / COUNT(*), 2) as \"Failure Rate %\" -- calculates failure percentage per technology\r\nFROM call_records -- from the main call_records table\r\nGROUP BY source_type; -- groups results by technology type\r\n-- Compares interference and performance metrics between ISSI and VOIP technologies to identify technology-specific issues\r\n",
+          "rawSql": "-- ISSI vs VOIP Interference Comparison\r\n-- Compares interference and performance metrics between ISSI and VOIP technologies to identify technology-specific issues\r\n\r\nSELECT \r\n    source_type as \"Technology\", -- displays the technology type (ISSI or VOIP)\r\n    COUNT(*) as \"Total Calls\", -- counts total calls per technology\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '009 - Pre-emptive use of resource') as \"Pre-emptive Resource Use\", -- counts pre-emptive resource use incidents per technology\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '014 - SwMI requested disconnection') as \"SwMI Requested Disconn\", -- counts SwMI requested disconnection incidents per technology\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '016 - Unknown TETRA identity') as \"Unknown TETRA Identity\", -- counts unknown TETRA identity incidents per technology\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '017 - Supplementary Service (SS) specific disconnection') as \"SS Specific Disconn\", -- counts SS specific disconnection incidents per technology\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '019 - Call restoration of the other user failed') as \"Call Restoration Failed\", -- counts call restoration failure incidents per technology\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '023 - Non-call owner requested disconnection') as \"Non-call Owner Disconn\", -- counts non-call owner disconnection incidents per technology\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '034 - Error in SBS') as \"SBS Errors\", -- counts SBS error incidents per technology\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '037 - Timeout in queue waiting for resources') as \"Resource Queue Timeout\", -- counts resource queue timeout incidents per technology\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '040 - Invalid called party SSI') as \"Invalid Called Party SSI\", -- counts invalid called party SSI incidents per technology\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '042 - Invalid calling party SSI') as \"Invalid Calling Party SSI\", -- counts invalid calling party SSI incidents per technology\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '043 - Calling party is not allowed to make this type of service') as \"Service Not Allowed\", -- counts service not allowed incidents per technology\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '044 - Preemption') as \"Preemption\", -- counts preemption incidents per technology\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '045 - Calling party does not belong to the called party''s group') as \"Group Access Denied\", -- counts group access denied incidents per technology\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '054 - Empty group') as \"Empty Group\", -- counts empty group incidents per technology\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '056 - Called party not registered') as \"Called Party Not Registered\", -- counts called party not registered incidents per technology\r\n    COUNT(*) FILTER (WHERE cell_reselection = 'Yes') as \"Cell Reselections\", -- counts cell reselection events per technology\r\n    ROUND(AVG(duration_secs), 2) as \"Avg Duration\", -- calculates average call duration per technology\r\n    ROUND(COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001 - User requested disconnection', '013 - Expiry of timer', '033 - Speech inactivity timeout')) * 100.0 / COUNT(*), 2) as \"Interference Rate %\" -- calculates interference percentage per technology (excluding normal user disconnections, timer expiry, and speech timeouts)\r\nFROM call_records -- from the main call_records table\r\nGROUP BY source_type; -- groups results by technology type\r\n-- Compares interference and performance metrics between ISSI and VOIP technologies to identify technology-specific issues",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1459,7 +1526,7 @@
         }
       ],
       "title": "ISSI vs VOIP Interference Comparison",
-      "type": "table"
+      "type": "barchart"
     },
     {
       "datasource": {
@@ -1608,7 +1675,8 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "fixedColor": "red",
+            "mode": "continuous-BlYlRd"
           },
           "custom": {
             "axisBorderShow": false,
@@ -2416,7 +2484,7 @@
           }
         }
       ],
-      "title": "System Error Distribution",
+      "title": "Error Distribution",
       "type": "piechart"
     },
     {
@@ -3674,11 +3742,12 @@
         "type": "grafana-postgresql-datasource",
         "uid": "eeu1dgjr0unswf"
       },
-      "description": "-- 📊 OVERVIEW: Panel Type: Pie chart | Description: Distribution of network load by technology type | Unit: Count | Decimals: 0\n-- 🎯 SETTINGS: Min/Max Values: None as it valuates all | Pagination: None | Thresholds: None | Value mapping: None\n-- 💡 BEST PRACTICE: Use distinct colors, enable hover interactions, set minimum slice percentage to reduce clutter\n",
+      "description": "Counts all records and based on source location VOIP or SBS it will show which predominates",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "fixedColor": "#74b02c",
+            "mode": "shades"
           },
           "custom": {
             "hideFrom": {
@@ -5106,18 +5175,21 @@
         "type": "grafana-postgresql-datasource",
         "uid": "eeu1dgjr0unswf"
       },
+      "description": "Compilates all source_locations and develops multiple analisis\n\n- Health Score: the less % = the less # of errors = the better health\n- Occupancy: based on max amount of calls allowed, averages ocupancy\n- Maintenance errors: counts errors where restoration, 014, preemption, invalid%ssi are included (except for 001,013,033)\n- Avg call duration: Average call duration in seconds\n- Mantinance Status: counting all errors except 001,033,013 will give a sentence value\n\n---\nSample Data",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "continuous-GrYlRd"
           },
           "custom": {
             "align": "auto",
             "cellOptions": {
               "type": "auto"
             },
+            "filterable": true,
             "inspect": false
           },
+          "fieldMinMax": false,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -5125,10 +5197,6 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -5154,7 +5222,7 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 81
+                "value": 117
               }
             ]
           },
@@ -5167,6 +5235,15 @@
               {
                 "id": "custom.width",
                 "value": 96
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "applyToRow": false,
+                  "mode": "gradient",
+                  "type": "color-background",
+                  "wrapText": false
+                }
               }
             ]
           },
@@ -5178,27 +5255,100 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 136
+                "value": 952
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "lcd",
+                  "type": "gauge",
+                  "valueDisplayMode": "color"
+                }
+              },
+              {
+                "id": "min"
+              },
+              {
+                "id": "max",
+                "value": 100
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "System Errors"
+              "options": "Occupancy (calls/day)"
             },
             "properties": [
               {
                 "id": "custom.width",
-                "value": 131
+                "value": 185
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "max",
+                "value": 100
+              },
+              {
+                "id": "min",
+                "value": 0
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Maintenance Errors"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 176
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Error Calls"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 128
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Avg Call Duration"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 160
               }
             ]
           }
         ]
       },
       "gridPos": {
-        "h": 13,
-        "w": 14,
+        "h": 8,
+        "w": 24,
         "x": 0,
         "y": 101
       },
@@ -5207,6 +5357,7 @@
         "cellHeight": "sm",
         "footer": {
           "countRows": false,
+          "enablePagination": false,
           "fields": "",
           "reducer": [
             "sum"
@@ -5222,7 +5373,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\r\n    network_controller as \"Controller\",\r\n    SUBSTRING(source_location FROM 1 FOR 8) as \"Location\",\r\n    COUNT(*) as \"Total Calls\",\r\n    ROUND((COUNT(*) FILTER (WHERE disconnection_cause = '001 - User requested disconnection') * 100.0 / NULLIF(COUNT(*), 0))::numeric, 2) as \"Health Score %\",\r\n    COUNT(*) FILTER (WHERE disconnection_cause LIKE '%Error%' OR disconnection_cause LIKE '%SBS%') as \"System Errors\",\r\n    COUNT(*) FILTER (WHERE disconnection_cause LIKE '%timeout%') as \"Timeout Issues\",\r\n    ROUND(AVG(duration_secs), 1) as \"Avg Call Duration\",\r\n    COUNT(*) FILTER (WHERE cell_reselection = 'Yes') as \"Cell Reselections\",\r\n    ROUND(((COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001 - User requested disconnection')) * 50.0 / NULLIF(COUNT(*), 0)) + \r\n           (COUNT(*) FILTER (WHERE disconnection_cause LIKE '%Error%' OR disconnection_cause LIKE '%SBS%') * 30.0 / NULLIF(COUNT(*), 0)) +\r\n           (COUNT(*) FILTER (WHERE cell_reselection = 'Yes') * 20.0 / NULLIF(COUNT(*), 0)))::numeric, 1) as \"Maintenance Priority\",\r\n    CASE \r\n        WHEN (COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001 - User requested disconnection')) * 100.0 / NULLIF(COUNT(*), 0)) > 30 THEN 'URGENT_MAINTENANCE'\r\n        WHEN (COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001 - User requested disconnection')) * 100.0 / NULLIF(COUNT(*), 0)) > 15 THEN 'SCHEDULED_MAINTENANCE'\r\n        WHEN (COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001 - User requested disconnection')) * 100.0 / NULLIF(COUNT(*), 0)) > 5 THEN 'MONITORING'\r\n        ELSE 'HEALTHY'\r\n    END as \"Maintenance Status\"\r\nFROM call_records\r\nWHERE network_controller IS NOT NULL\r\n    AND source_location IS NOT NULL\r\nGROUP BY \r\n    network_controller,\r\n    SUBSTRING(source_location FROM 1 FOR 8)\r\nHAVING COUNT(*) >= 10\r\nORDER BY \"Maintenance Priority\" DESC;",
+          "rawSql": "SELECT\r\n    network_controller as \"Controller\",\r\n    SUBSTRING(source_location FROM 1 FOR 8) as \"Location\",\r\n    COUNT(*) as \"Total Calls\",\r\n    \r\n   -- Health Score: High % = More errors (bad health), Low % = Fewer errors (good health)\r\n    ROUND(\r\n        CASE \r\n            WHEN COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) <= 15 THEN 5.0\r\n            ELSE LEAST(\r\n                5.0 + (LN(COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) / 15.0) * 20.0),\r\n                99.0\r\n            )\r\n        END\r\n    , 2) as \"Health Score %\",\r\n     \r\n    -- Occupancy: Based on calls per day with 1000 call limit (percentage of capacity)\r\n    ROUND((COUNT(*) / NULLIF(EXTRACT(DAY FROM (MAX(date_time) - MIN(date_time))) + 1, 0))::numeric, 0) as \"Occupancy (calls/day)\",\r\n\r\n    -- Maintenance-related errors count\r\n    COUNT(*) FILTER (WHERE \r\n        disconnection_cause LIKE '%014%' OR\r\n        disconnection_cause ILIKE '%restoration%' OR \r\n        disconnection_cause ILIKE '%preemption%' OR \r\n        disconnection_cause ILIKE '%invalid%ssi%'\r\n    ) as \"Maintenance Errors\",\r\n    \r\n    -- Total error calls (excluding normal disconnections)\r\n    COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) as \"Error Calls\",\r\n    \r\n    -- Average call duration\r\n    ROUND(AVG(duration_secs), 1) as \"Avg Call Duration\",\r\n    \r\n    -- Maintenance Status with adjusted thresholds\r\n    CASE \r\n        WHEN (COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) * 100.0 / NULLIF(COUNT(*), 0)) >= 80 \r\n             OR (COUNT(*) / NULLIF(EXTRACT(DAY FROM (MAX(date_time) - MIN(date_time))) + 1, 0)) > 950\r\n             OR COUNT(*) FILTER (WHERE disconnection_cause LIKE '%014%' OR disconnection_cause ILIKE '%restoration%' OR disconnection_cause ILIKE '%preemption%' OR disconnection_cause ILIKE '%invalid%ssi%') >= 5\r\n             THEN 'URGENT_MAINTENANCE'\r\n        WHEN (COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) * 100.0 / NULLIF(COUNT(*), 0)) >= 50 \r\n             OR (COUNT(*) / NULLIF(EXTRACT(DAY FROM (MAX(date_time) - MIN(date_time))) + 1, 0)) > 800\r\n             OR COUNT(*) FILTER (WHERE disconnection_cause LIKE '%014%' OR disconnection_cause ILIKE '%restoration%' OR disconnection_cause ILIKE '%preemption%' OR disconnection_cause ILIKE '%invalid%ssi%') >= 2\r\n             THEN 'SCHEDULED_MAINTENANCE'\r\n        WHEN (COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) * 100.0 / NULLIF(COUNT(*), 0)) >= 20 \r\n             OR (COUNT(*) / NULLIF(EXTRACT(DAY FROM (MAX(date_time) - MIN(date_time))) + 1, 0)) > 600\r\n             OR COUNT(*) FILTER (WHERE disconnection_cause LIKE '%014%' OR disconnection_cause ILIKE '%restoration%' OR disconnection_cause ILIKE '%preemption%' OR disconnection_cause ILIKE '%invalid%ssi%') >= 1\r\n             THEN 'MONITORING'\r\n        ELSE 'HEALTHY'\r\n    END as \"Maintenance Status\"\r\n\r\nFROM call_records\r\nWHERE network_controller IS NOT NULL\r\n    AND source_location IS NOT NULL\r\n    AND date_time IS NOT NULL\r\nGROUP BY \r\n    network_controller,\r\n    SUBSTRING(source_location FROM 1 FOR 8)\r\nHAVING COUNT(*) >= 10\r\nORDER BY \r\n    (COUNT(*) FILTER (WHERE disconnection_cause NOT IN ('001', '013', '033')) * 100.0 / NULLIF(COUNT(*), 0)) DESC;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -5243,119 +5394,9 @@
           }
         }
       ],
-      "title": "System Maintenance Analytics",
+      "title": "Source Location Maintenance",
+      "transparent": true,
       "type": "table"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "eeu1dgjr0unswf"
-      },
-      "description": "-- 📊 OVERVIEW: Panel Type: Time series | Description: System failures and errors over time by category | Unit: Count | Decimals: 0\n-- 🎯 SETTINGS: Min/Max Values: None as it valuates all | Pagination: None | Thresholds: None | Value mapping: None\n-- 💡 BEST PRACTICE: Use different colors per series, enable tooltip sort, set point size 5, stack series for better visualization\n",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 13,
-        "w": 10,
-        "x": 14,
-        "y": 101
-      },
-      "id": 6,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.2.0-16711121739",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT \r\n    DATE_TRUNC('hour', date_time) as time, -- truncates timestamp to hourly intervals for grouping\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '034 - Error in SBS') as \"SBS Errors\", -- counts SBS system errors per hour\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '016 - Unknown TETRA identity') as \"TETRA Identity Errors\", -- counts TETRA identity errors per hour\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '019 - Call restoration of the other user failed') as \"Restoration Failures\", -- counts call restoration failures per hour\r\n    COUNT(*) FILTER (WHERE disconnection_cause = '014 - SwMI requested disconnection') as \"SwMI Disconnections\" -- counts SwMI disconnections per hour\r\nFROM call_records -- from the main call_records table\r\nWHERE date_time IS NOT NULL -- only includes records with valid timestamps\r\nGROUP BY DATE_TRUNC('hour', date_time) -- groups results by hour intervals\r\nORDER BY time; -- sorts results chronologically by time\r\n-- Groups calls by hour and counts different types of system failures for time series analysis\r\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "System Failures Over Time",
-      "type": "timeseries"
     },
     {
       "datasource": {
@@ -5474,7 +5515,7 @@
         "h": 9,
         "w": 7,
         "x": 0,
-        "y": 114
+        "y": 109
       },
       "id": 21,
       "options": {
@@ -5601,7 +5642,7 @@
         "h": 9,
         "w": 17,
         "x": 7,
-        "y": 114
+        "y": 109
       },
       "id": 9,
       "options": {
@@ -5656,12 +5697,12 @@
     "list": []
   },
   "time": {
-    "from": "2025-02-27T22:23:13.173Z",
-    "to": "2025-03-04T00:47:56.590Z"
+    "from": "2025-02-27T05:00:00.000Z",
+    "to": "2025-03-04T04:59:59.000Z"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "NY Transport Dashboard",
   "uid": "fc054eb6-69ab-461d-a315-b10354622963",
-  "version": 52
+  "version": 65
 }
