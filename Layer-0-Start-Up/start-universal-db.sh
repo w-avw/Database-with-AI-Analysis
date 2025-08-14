@@ -15,7 +15,7 @@ NC='\033[0m'
 
 # System configuration (based on working containers)
 POSTGRES_CONTAINER="mypg"
-GRAFANA_CONTAINER="grafana"
+GRAFANA_CONTAINER="universal-db-grafana"
 DB_USER="myuser"
 DB_NAME="mydb"
 
