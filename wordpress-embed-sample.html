@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grafana Embed Test</title>
+</head>
+<body>
+    <h2>Grafana Dashboard Embed Test</h2>
+    
+    <!-- WordPress Custom HTML Block Code -->
+    <div style="position:relative;width:100%;height:0;padding-bottom:70%;">
+        <iframe
+            src="http://localhost:3000/d/1/new-dashboard?orgId=1&from=now-24h&to=now&refresh=30s&kiosk&theme=light"
+            style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+            allow="fullscreen"
+        ></iframe>
+    </div>
+    
+    <p><strong>Instructions for WordPress:</strong></p>
+    <ol>
+        <li>Copy the iframe code above</li>
+        <li>In WordPress, add a "Custom HTML" block</li>
+        <li>Paste the code</li>
+        <li>Replace the dashboard ID in the URL with your actual dashboard</li>
+    </ol>
+    
+    <p><strong>To get your dashboard URL:</strong></p>
+    <ol>
+        <li>Go to http://localhost:3000</li>
+        <li>Open your dashboard</li>
+        <li>Click "Share" → "Link" → "Public Dashboard"</li>
+        <li>Copy the public URL and use it in the iframe src</li>
+    </ol>
+</body>
+</html>
