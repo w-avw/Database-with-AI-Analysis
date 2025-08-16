@@ -1,69 +1,82 @@
-# Layer 9: WordPress and Word Integration
+# WordPress Word Document Integration via Make.com Webhooks
 
-This project integrates a Word document generation feature into a WordPress site using a Node.js backend. The backend dynamically updates a Word template based on user input from the WordPress frontend.
+This solution provides a WordPress plugin that integrates with Make.com webhooks to edit Word document titles remotely. This approach eliminates local processing complexity and provides a more reliable cloud-based solution.
 
-## Project Structure
+## Architecture Overview
 
-```
-Layer-9-Wordpress-and-Word
-├── backend
-│   ├── src
-│   │   ├── server.js               # Main entry point for the Node.js backend
-│   │   ├── controllers              # Contains logic for processing requests
-│   │   │   └── documentController.js
-│   │   ├── services                 # Handles Word document manipulation
-│   │   │   └── docxService.js
-│   │   └── middleware               # Middleware for handling CORS
-│   │       └── cors.js
-│   ├── templates                    # Word template files
-│   │   └── template.docx
-│   ├── output                       # Directory for generated Word documents
-│   │   └── .gitkeep
-│   ├── package.json                 # Node.js project configuration
-│   └── README.md                    # Documentation for the backend
-├── wordpress
-│   ├── plugins                      # WordPress plugins
-│   │   └── word-integration
-│   │       ├── word-integration.php # Main plugin file
-│   │       ├── assets               # Plugin assets (JS and CSS)
-│   │       │   ├── js
-│   │       │   │   └── main.js
-│   │       │   └── css
-│   │       │       └── style.css
-│   │       └── templates            # Plugin templates
-│   │           └── control-panel.php
-│   └── themes                       # WordPress themes
-│       └── custom-theme
-│           ├── functions.php        # Theme functions and setup
-│           ├── index.php            # Main template file
-│           └── style.css            # Theme styles
-├── docker-compose.yml               # Docker configuration
-└── README.md                        # Overview of the entire project
-```
+1. **WordPress Plugin**: Provides UI with Add/Remove/Export buttons
+2. **Make.com Scenario**: Handles document processing in the cloud
+3. **Webhook Communication**: HTTP requests between WordPress and Make.com
+
+## Components
+
+### WordPress Plugin (`word-integration/`)
+- Main plugin file with shortcode `[word_integration]`
+- Admin interface for configuration
+- HTTP client for webhook communication
+
+### Make.com Integration
+- Custom Webhook module to receive requests
+- Document processing logic
+- Webhook Response module to send results
 
 ## Setup Instructions
 
-1. **Clone the Repository**: Clone this repository to your local machine or server.
+1. **Install WordPress Plugin**
+   - Upload to `wp-content/plugins/`
+   - Activate in WordPress admin
 
-2. **Backend Setup**:
-   - Navigate to the `backend` directory.
-   - Run `npm install` to install the necessary dependencies.
+2. **Configure Make.com**
+   - Create new scenario
+   - Add Custom Webhook module
+   - Add document processing modules
+   - Add Webhook Response module
 
-3. **WordPress Setup**:
-   - Copy the `wordpress` directory to your WordPress installation's `wp-content/plugins` directory.
-   - Activate the "Word Integration" plugin from the WordPress admin panel.
+3. **Configure Plugin**
+   - Enter Make.com webhook URL in admin
+   - Test connection
 
-4. **Run the Backend**:
-   - Start the Node.js server by running `node src/server.js` in the `backend` directory.
+## API Specification
 
-5. **Access the Control Panel**:
-   - Navigate to the control panel in your WordPress site to add/remove items and export the Word document.
+### Add Title Request
+```json
+{
+  "action": "add",
+  "title": "PROTOCOLO MANTENIMIENTO REMOTO ESTACIÓN BASE NEBULA"
+}
+```
 
-## Usage Guidelines
+### Remove Title Request
+```json
+{
+  "action": "remove",
+  "section": "selected_section_name"
+}
+```
 
-- Use the buttons in the control panel to manage items and generate the Word document.
-- The generated document will be a copy of the template with the specified items included.
+### Export Document Request
+```json
+{
+  "action": "export"
+}
+```
 
-## Contributing
+### Response Format
+```json
+{
+  "success": true,
+  "message": "Operation completed successfully",
+  "data": {
+    "sections": ["Section 1", "Section 2", "Section 3"],
+    "download_url": "https://example.com/document.docx"
+  }
+}
+```
 
-Feel free to contribute to this project by submitting issues or pull requests. Your feedback and contributions are welcome!
+## Benefits of This Approach
+
+1. **Reliability**: Cloud processing eliminates local dependency issues
+2. **Scalability**: Make.com handles processing load
+3. **Maintenance**: No server maintenance required
+4. **Security**: Document processing happens in secure cloud environment
+5. **Flexibility**: Easy to modify processing logic in Make.com
