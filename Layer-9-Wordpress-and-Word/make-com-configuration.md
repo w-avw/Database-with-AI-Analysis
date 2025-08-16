@@ -15,8 +15,11 @@ The Make.com scenario will:
 - **Module**: Custom Webhook
 - **Purpose**: Receive requests from WordPress
 - **Configuration**:
-  - Create a new webhook
-  - Copy the webhook URL to WordPress plugin settings
+  - Create a new webhook in Make.com (Custom Webhook module)
+  - After creation, copy the generated webhook URL
+  - In WordPress, go to Settings > Word Integration
+  - Paste the webhook URL into the "Webhook URL" field
+  - (Reference: This field is saved in the plugin and used in `word-integration.php` line where `$this->webhook_url = get_option('word_integration_webhook_url', '');` is set)
   - Set data structure to handle JSON payload
 
 ### 2. Router
@@ -66,8 +69,10 @@ The Make.com scenario will:
 ### Step 1: Create Custom Webhook
 1. Add Custom Webhook module as trigger
 2. Click "Add" to create new webhook
-3. Copy the generated webhook URL
-4. Configure to accept JSON data
+3. Copy the generated webhook URL from the Custom Webhook module in Make.com
+4. In WordPress, navigate to Settings > Word Integration
+5. Paste the webhook URL into the "Webhook URL" field (this connects Make.com to the plugin; see `word-integration.php` line with `$this->webhook_url = get_option('word_integration_webhook_url', '');`)
+6. Configure the webhook module in Make.com to accept JSON data
 5. Set up data structure with these fields:
    - action (text)
    - title (text, optional)
@@ -177,7 +182,7 @@ Add error handling to each route:
 
 ## Testing
 
-1. Use the WordPress admin test button
+1. In WordPress, use the "Test Webhook Connection" button in Settings > Word Integration to verify connectivity
 2. Monitor Make.com execution logs
 3. Verify document processing results
 4. Test error scenarios

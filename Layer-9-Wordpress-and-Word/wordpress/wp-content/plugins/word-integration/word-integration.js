@@ -10,7 +10,12 @@ jQuery(document).ready(function($) {
         
         // Bind button events
         $('#add-title-btn').click(function() {
-            handleAction('add');
+                var userText = $('#add-title-input').val();
+                if (!userText) {
+                    showStatus('error', 'Please enter text to add.');
+                    return;
+                }
+                handleAction('add', userText);
         });
         
         $('#remove-title-btn').click(function() {
@@ -45,6 +50,7 @@ jQuery(document).ready(function($) {
     var $dropdown = $('#section-dropdown');
     $dropdown.empty();
     $dropdown.append('<option value="Title">Title</option>');
+    // No other options added
     }
     
     function showRemoveSection() {
@@ -53,8 +59,10 @@ jQuery(document).ready(function($) {
             return;
         }
         
-        $('#remove-section-selector').show();
-        hideStatus();
+    $('#remove-section-selector').show();
+    hideStatus();
+    // Update button label in case it was cached
+    $('#confirm-remove-btn .button-text').text('Remove');
     }
     
     function hideRemoveSection() {

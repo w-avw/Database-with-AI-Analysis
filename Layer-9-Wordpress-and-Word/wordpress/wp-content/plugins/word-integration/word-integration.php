@@ -50,27 +50,16 @@ class WordIntegrationMakecom {
     
     public function settings_init() {
         register_setting('word_integration_settings', 'word_integration_webhook_url');
-        register_setting('word_integration_settings', 'word_integration_api_key');
-        
         add_settings_section(
             'word_integration_section',
             'Make.com Webhook Configuration',
             array($this, 'settings_section_callback'),
             'word_integration_settings'
         );
-        
         add_settings_field(
             'webhook_url',
             'Webhook URL',
             array($this, 'webhook_url_field'),
-            'word_integration_settings',
-            'word_integration_section'
-        );
-        
-        add_settings_field(
-            'api_key',
-            'API Key (Optional)',
-            array($this, 'api_key_field'),
             'word_integration_settings',
             'word_integration_section'
         );
@@ -81,42 +70,121 @@ class WordIntegrationMakecom {
     }
     
     public function webhook_url_field() {
-        $value = get_option('word_integration_webhook_url', '');
-        echo '<input type="url" name="word_integration_webhook_url" value="' . esc_attr($value) . '" class="regular-text" placeholder="https://hook.integromat.com/your-webhook-url" />';
-        echo '<p class="description">Enter your Make.com Custom Webhook URL</p>';
+    $value = get_option('word_integration_webhook_url', '');
+    echo '<input type="url" name="word_integration_webhook_url" value="' . esc_attr($value) . '" class="regular-text" placeholder="https://hook.integromat.com/your-webhook-url" />';
+    echo '<p class="description">Enter your Make.com Custom Webhook URL</p>';
     }
     
     public function api_key_field() {
-        $value = get_option('word_integration_api_key', '');
-        echo '<input type="text" name="word_integration_api_key" value="' . esc_attr($value) . '" class="regular-text" />';
-        echo '<p class="description">Optional API key for authentication</p>';
+    // API Key field removed
     }
     
     public function admin_page() {
         ?>
-        <div class="wrap">
-            <h1>Word Integration Settings</h1>
+        <div class="wrap word-integration-admin-panel">
+            <h1 style="margin-bottom:24px;">Word Integration Settings</h1>
             <form method="post" action="options.php">
-                <?php
-                settings_fields('word_integration_settings');
-                do_settings_sections('word_integration_settings');
-                submit_button();
-                ?>
+                <?php settings_fields('word_integration_settings'); do_settings_sections('word_integration_settings'); ?>
+                <div class="wi-panel-section">
+                    <div class="wi-panel-row">
+                        <div class="wi-panel-label">Site Status:</div>
+                        <div class="wi-panel-value"><span style="color:#d32f2f;font-weight:600;">NOT LIVE</span></div>
+                    </div>
+                    <div class="wi-panel-row">
+                        <div class="wi-panel-label">Coming Soon page</div>
+                        <div class="wi-panel-value">
+                            <label class="wi-switch">
+                                <input type="checkbox" checked disabled>
+                                <span class="wi-slider"></span>
+                            </label>
+                            <span style="margin-left:12px;color:#1976d2;">Your website is currently displaying a "Coming Soon" page.</span>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="wi-panel-section">
+                    <div class="wi-panel-label" style="font-weight:600;">Features</div>
+                    <div class="wi-panel-row">
+                        <div class="wi-panel-label">WonderBlocks</div>
+                        <div class="wi-panel-value">
+                            <label class="wi-switch"><input type="checkbox" checked disabled><span class="wi-slider"></span></label>
+                        </div>
+                    </div>
+                    <div class="wi-panel-row">
+                        <div class="wi-panel-label">Help Center</div>
+                        <div class="wi-panel-value">
+                            <label class="wi-switch"><input type="checkbox" checked disabled><span class="wi-slider"></span></label>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="wi-panel-section">
+                    <div class="wi-panel-label" style="font-weight:600;">Automatic Updates</div>
+                    <div class="wi-panel-row">
+                        <div class="wi-panel-label">Manage All Updates</div>
+                        <div class="wi-panel-value">
+                            <label class="wi-switch"><input type="checkbox" checked><span class="wi-slider"></span></label>
+                            <span style="margin-left:12px;color:#888;">WordPress Core, Plugins, Themes</span>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="wi-panel-section">
+                    <div class="wi-panel-label" style="font-weight:600;">Content Options</div>
+                    <div class="wi-panel-row">
+                        <div class="wi-panel-label">Number of revisions posts can save</div>
+                        <div class="wi-panel-value">
+                            <input type="number" name="wi_revisions" value="5" min="1" max="20" style="width:60px;">
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="wi-panel-section">
+                    <div class="wi-panel-label" style="font-weight:600;">Word Integration Plugin Settings</div>
+                    <div class="wi-panel-row">
+                        <div class="wi-panel-label">Webhook URL</div>
+                        <div class="wi-panel-value">
+                            <input type="url" name="word_integration_webhook_url" value="<?php echo esc_attr(get_option('word_integration_webhook_url', '')); ?>" class="regular-text" placeholder="https://hook.integromat.com/your-webhook-url" />
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="wi-panel-section">
+                    <div class="wi-panel-label" style="font-weight:600;">Test Connection</div>
+                    <div class="wi-panel-row">
+                        <button id="test-webhook" class="button button-secondary">Test Webhook Connection</button>
+                        <div id="test-result" style="margin-left:16px;"></div>
+                    </div>
+                </div>
+                <hr>
+                <div style="margin-top:24px;">
+                    <?php submit_button(); ?>
+                </div>
             </form>
-            
-            <h2>Test Connection</h2>
-            <button id="test-webhook" class="button button-secondary">Test Webhook Connection</button>
-            <div id="test-result" style="margin-top: 10px;"></div>
-            
+            <style>
+            .word-integration-admin-panel { max-width: 900px; background: #fff; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); padding: 32px 32px 24px 32px; }
+            .wi-panel-section { margin-bottom: 24px; }
+            .wi-panel-label { font-size: 16px; margin-bottom: 8px; }
+            .wi-panel-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+            .wi-panel-row .wi-panel-label { font-size: 15px; font-weight: 400; margin-bottom: 0; }
+            .wi-panel-value { display: flex; align-items: center; }
+            .wi-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+            .wi-switch input { opacity: 0; width: 0; height: 0; }
+            .wi-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #e0e0e0; border-radius: 24px; transition: .4s; }
+            .wi-switch input:checked + .wi-slider { background: #2566c1; }
+            .wi-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: .4s; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+            .wi-switch input:checked + .wi-slider:before { transform: translateX(20px); }
+            .wi-slider:after { content: ""; display: block; position: absolute; left: 0; top: 0; width: 100%; height: 100%; border-radius: 24px; }
+            .wi-panel-section hr { margin: 18px 0; }
+            </style>
             <script>
             jQuery(document).ready(function($) {
-                $('#test-webhook').click(function() {
+                $('#test-webhook').click(function(e) {
+                    e.preventDefault();
                     var $button = $(this);
                     var $result = $('#test-result');
-                    
                     $button.prop('disabled', true).text('Testing...');
                     $result.html('');
-                    
                     $.ajax({
                         url: ajaxurl,
                         type: 'POST',
@@ -157,17 +225,17 @@ class WordIntegrationMakecom {
                 <h3>Word Document Manager</h3>
                 <p>Manage your Word document titles using cloud processing</p>
             </div>
-            
             <div class="word-integration-buttons">
+                <input type="text" id="add-title-input" class="cool-input" placeholder="Enter any text..." style="margin-right:10px;max-width:220px;">
                 <button id="add-title-btn" class="cool-button cool-button-word-light" data-action="add">
-                    <span class="button-text">Add Title</span>
+                    <span class="button-text">Add</span>
                     <span class="button-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M12 5v14M5 12h14"/>
                         </svg>
                     </span>
                 </button>
-                <button id="remove-title-btn" class="cool-button cool-button-word-dark" data-action="remove">
+                <button id="remove-title-btn" class="cool-button cool-button-word-dark" data-action="remove" style="margin-right:18px;">
                     <span class="button-text">Remove</span>
                     <span class="button-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -175,7 +243,7 @@ class WordIntegrationMakecom {
                         </svg>
                     </span>
                 </button>
-                <button id="export-doc-btn" class="cool-button cool-button-word-mid" data-action="export">
+                <button id="export-doc-btn" class="cool-button cool-button-word-mid" data-action="export" style="margin-right:22px;">
                     <span class="button-text">Export Document</span>
                     <span class="button-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -184,6 +252,18 @@ class WordIntegrationMakecom {
                     </span>
                 </button>
             </div>
+        .cool-input {
+            padding: 10px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .cool-input:focus {
+            border-color: #2566c1;
+            box-shadow: 0 0 0 2px rgba(37,102,193,0.12);
+        }
             
             <div id="remove-section-selector" class="word-integration-section" style="display: none;">
                 <h4>Remove Section:</h4>
@@ -191,7 +271,7 @@ class WordIntegrationMakecom {
                     <option value="Title">Title</option>
                 </select>
                 <button id="confirm-remove-btn" class="cool-button cool-button-word-dark cool-button-sm" style="margin-left: 10px;">
-                    <span class="button-text">Remove Title</span>
+                    <span class="button-text">Remove</span>
                     <span class="button-icon">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M5 12h14"/>
@@ -272,6 +352,7 @@ class WordIntegrationMakecom {
             transition: opacity 0.5s ease;
             z-index: 2;
             position: relative;
+            min-width: 90px;
         }
         .cool-button .button-icon {
             position: absolute;
@@ -516,12 +597,11 @@ class WordIntegrationMakecom {
             'timestamp' => current_time('mysql'),
             'source' => 'wordpress'
         );
-        
         switch ($action) {
             case 'add':
-                $request_data['title'] = 'PROTOCOLO MANTENIMIENTO REMOTO ESTACIÓN BASE NEBULA';
+                // $section is the user text from JS
+                $request_data['Add'] = $section;
                 break;
-                
             case 'remove':
                 if (empty($section)) {
                     return array(
@@ -532,15 +612,12 @@ class WordIntegrationMakecom {
                 }
                 $request_data['section'] = $section;
                 break;
-                
             case 'export':
                 // No additional data needed for export
                 break;
-                
             case 'get_sections':
                 // Request to get available sections
                 break;
-                
             default:
                 return array(
                     'success' => false,
@@ -549,11 +626,7 @@ class WordIntegrationMakecom {
                 );
         }
         
-        // Add API key if configured
-        $api_key = get_option('word_integration_api_key', '');
-        if (!empty($api_key)) {
-            $request_data['api_key'] = $api_key;
-        }
+    // API Key logic removed
         
         // Send HTTP request to Make.com webhook
         $response = wp_remote_post($this->webhook_url, array(
