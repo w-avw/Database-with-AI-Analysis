@@ -1,0 +1,20 @@
+{
+  "name": "layer-9-wordpress-and-word",
+  "version": "1.0.0",
+  "description": "Backend for WordPress integration with dynamic Word document generation.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "docx-templates": "^4.14.1",
+    "docxtemplater": "^3.25.0",
+    "easy-template-x": "^6.2.1",
+    "express": "^4.17.1",
+    "jszip": "^3.10.1",
+    "pizzip": "^3.1.1"
+  },
+  "author": "",
+  "license": "ISC"
+}

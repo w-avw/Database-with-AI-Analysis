@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
-const { TemplateHandler } = require('easy-template-x');
+const createReport = require('docx-templates').default;
 
 const app = express();
 const PORT = 3002;
@@ -19,7 +19,7 @@ const outputPath = path.resolve(process.cwd(), 'output/edited_document.docx');
 let currentTitle = null;
 const ORIGINAL_TITLE = "PROTOCOLO MANTENIMIENTO REMOTO ESTACIÓN BASE NEBULA";
 
-// Change title using easy-template-x with .docx - SIMPLE approach
+// Change title using docx-templates - MORE RELIABLE
 async function changeTitle(newTitle) {
     try {
         console.log(`📝 Processing .docx title: "${newTitle}"`);
@@ -35,9 +35,11 @@ async function changeTitle(newTitle) {
         );
         const templateBuffer = Buffer.from(templateString, 'binary');
         
-        // Now use easy-template-x to replace {{TITLE}} with the new title
-        const handler = new TemplateHandler();
-        const doc = await handler.process(templateBuffer, { TITLE: newTitle });
+        // Now use docx-templates to replace {{TITLE}} with the new title
+        const doc = await createReport({
+            template: templateBuffer,
+            data: { TITLE: newTitle }
+        });
         
         // Save the final document
         fs.writeFileSync(outputPath, doc);
