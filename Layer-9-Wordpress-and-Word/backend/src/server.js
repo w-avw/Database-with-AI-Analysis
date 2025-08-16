@@ -1,91 +1,111 @@
 const express = require('express');
-const fs = require('fs');
 const cors = require('cors');
+const fs = require('fs');
 const path = require('path');
-const PizZip = require('pizzip');
-const Docxtemplater = require('docxtemplater');
+const { TemplateHandler } = require('easy-template-x');
 
 const app = express();
-app.use(cors());
+const PORT = 3002;
+
+// Enable CORS
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-app.post('/generate', (req, res) => {
-    const { action, text } = req.body;
+// File paths - using clean .docx format
+const originalPath = path.resolve(process.cwd(), 'templates/original.docx');
+const outputPath = path.resolve(process.cwd(), 'output/edited_document.docx');
 
+// Memory storage
+let currentTitle = null;
+const ORIGINAL_TITLE = "PROTOCOLO MANTENIMIENTO REMOTO ESTACIÓN BASE NEBULA";
+
+// Change title using easy-template-x with .docx - SIMPLE approach
+async function changeTitle(newTitle) {
     try {
-        // Load the .docm template
-        const templatePath = path.resolve(__dirname, '../templates/RPM_PR-_3240_ESTACIÓN_BASE1_20250324_01_LAND_MOBILE_RADIO_NETWORK_FOR_NEW_JERSEY_TRANSIT(NJT).docm');
-        const content = fs.readFileSync(templatePath, 'binary');
-
-        const zip = new PizZip(content);
-
-        if (action === 'add' && text) {
-            // Add text at the beginning of the document by modifying document.xml
-            const documentXml = zip.files['word/document.xml'].asText();
-            
-            // Create a new paragraph with the user's text
-            const newParagraph = `<w:p><w:pPr><w:spacing w:before="240" w:after="240"/></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>ADDED CONTENT: ${text}</w:t></w:r></w:p>`;
-            
-            // Insert after the opening body tag
-            const modifiedXml = documentXml.replace(/<w:body[^>]*>/, `$&${newParagraph}`);
-            
-            // Update the document
-            zip.file('word/document.xml', modifiedXml);
-        }
-
-        // Generate buffer and send as download
-        const buffer = zip.generate({ type: 'nodebuffer' });
+        console.log(`📝 Processing .docx title: "${newTitle}"`);
         
-        res.setHeader('Content-Disposition', 'attachment; filename=modified_document.docm');
-        res.setHeader('Content-Type', 'application/vnd.ms-word.document.macroEnabled.12');
-        res.send(buffer);
-
+        // Read the original clean .docx file
+        const originalBuffer = fs.readFileSync(originalPath);
+        
+        // First, replace the original title with {{TITLE}} placeholder in the binary content
+        const originalString = originalBuffer.toString('binary');
+        const templateString = originalString.replace(
+            new RegExp(ORIGINAL_TITLE, 'g'), 
+            '{{TITLE}}'
+        );
+        const templateBuffer = Buffer.from(templateString, 'binary');
+        
+        // Now use easy-template-x to replace {{TITLE}} with the new title
+        const handler = new TemplateHandler();
+        const doc = await handler.process(templateBuffer, { TITLE: newTitle });
+        
+        // Save the final document
+        fs.writeFileSync(outputPath, doc);
+        console.log('✅ .docx document processed successfully');
+        return true;
+        
     } catch (error) {
-        console.error('Error generating document:', error);
-        res.status(500).send('Error generating document: ' + error.message);
+        console.error('❌ Processing error:', error);
+        return false;
     }
-});
+}
 
-// New endpoint for paragraph removal
-app.post('/remove-paragraphs', (req, res) => {
-    const { maxLines = 2, maxCharacters = 100 } = req.body;
-
-    try {
-        const templatePath = path.resolve(__dirname, '../templates/RPM_PR-_3240_ESTACIÓN_BASE1_20250324_01_LAND_MOBILE_RADIO_NETWORK_FOR_NEW_JERSEY_TRANSIT(NJT).docm');
-        const content = fs.readFileSync(templatePath, 'binary');
-
-        const zip = new PizZip(content);
-        
-        // Get the document.xml content
-        const documentXml = zip.files['word/document.xml'].asText();
-        
-        // Basic paragraph removal logic - remove short paragraphs
-        const modifiedXml = documentXml.replace(/<w:p[^>]*>.*?<\/w:p>/g, (match) => {
-            // Count lines (approximated by line breaks)
-            const lineCount = (match.match(/<w:br\/>/g) || []).length + 1;
-            // Remove XML tags to count characters
-            const textContent = match.replace(/<[^>]*>/g, '');
-            
-            if (lineCount <= maxLines || textContent.length <= maxCharacters) {
-                return ''; // Remove the paragraph
-            }
-            return match; // Keep the paragraph
+// API Endpoints
+app.post('/edit', async (req, res) => {
+    const newTitle = req.body.newTitle || req.body.newText;
+    
+    if (!newTitle) {
+        return res.status(400).json({ success: false, message: 'Missing title' });
+    }
+    
+    const success = await changeTitle(newTitle);
+    
+    if (success) {
+        currentTitle = newTitle;
+        res.json({ 
+            success: true, 
+            message: `Title updated to "${newTitle}"`,
+            newTitle: newTitle
         });
-
-        // Update the document
-        zip.file('word/document.xml', modifiedXml);
-        
-        const buffer = zip.generate({ type: 'nodebuffer' });
-        
-        res.setHeader('Content-Disposition', 'attachment; filename=modified_document.docm');
-        res.setHeader('Content-Type', 'application/vnd.ms-word.document.macroEnabled.12');
-        res.send(buffer);
-
-    } catch (error) {
-        console.error('Error removing paragraphs:', error);
-        res.status(500).send('Error removing paragraphs: ' + error.message);
+    } else {
+        res.status(500).json({ success: false, message: 'Failed to update title' });
     }
 });
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Word Integration API running on port ${PORT}`));
+app.post('/remove', async (req, res) => {
+    const success = await changeTitle(ORIGINAL_TITLE);
+    
+    if (success) {
+        currentTitle = null;
+        res.json({ success: true, message: 'Title restored to original' });
+    } else {
+        res.status(500).json({ success: false, message: 'Failed to restore title' });
+    }
+});
+
+app.get('/export', (req, res) => {
+    const filename = currentTitle ? 'Edited_Document.docx' : 'Original_Document.docx';
+    
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    res.sendFile(path.resolve(outputPath));
+});
+
+app.get('/status', (req, res) => {
+    res.json({
+        success: true,
+        originalTitle: ORIGINAL_TITLE,
+        currentTitle: currentTitle || ORIGINAL_TITLE,
+        isEdited: !!currentTitle,
+        format: '.docx'
+    });
+});
+
+// Initialize and start
+console.log('🚀 Starting Clean .docx Server...');
+console.log('📁 Original file:', originalPath);
+console.log('📁 Output file:', outputPath);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Clean .docx Server running on port ${PORT}`);
+    console.log(`🌐 URL: https://didactic-space-succotash-4j5rv77xpp5fqg9p-3002.app.github.dev`);
+});
