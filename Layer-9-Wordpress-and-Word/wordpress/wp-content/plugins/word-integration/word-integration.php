@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Word Integration via Make.com
  * Description: Integrate WordPress with Make.com webhooks for Word document editing
- * Version: 1.0.0
+ * Version: 1.0.2
  * Author: Universal DB
  */
 
@@ -226,15 +226,15 @@ class WordIntegrationMakecom {
                 <p>Manage your Word document titles using cloud processing</p>
             </div>
             <div class="word-integration-buttons">
-                <input type="text" id="add-title-input" class="cool-input" placeholder="Enter any text..." style="margin-right:10px;max-width:220px;">
-                <button id="add-title-btn" class="cool-button cool-button-word-light" data-action="add">
-                    <span class="button-text">Add</span>
-                    <span class="button-icon">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 5v14M5 12h14"/>
-                        </svg>
-                    </span>
-                </button>
+                    <input type="text" id="add-title-input" class="cool-input" placeholder="Type anything..." style="margin-right:10px;max-width:220px;">
+                    <button id="add-title-btn" class="cool-button cool-button-word-light" data-action="add">
+                        <span class="button-text">Add</span>
+                        <span class="button-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 5v14M5 12h14"/>
+                            </svg>
+                        </span>
+                    </button>
                 <button id="remove-title-btn" class="cool-button cool-button-word-dark" data-action="remove" style="margin-right:18px;">
                     <span class="button-text">Remove</span>
                     <span class="button-icon">
@@ -254,6 +254,37 @@ class WordIntegrationMakecom {
             </div>
         .cool-input {
             padding: 10px 14px;
+                // Add button handler: send input value as 'Add' to backend
+                $('#add-title-btn').off('click').on('click', function(e) {
+                    e.preventDefault();
+                    var addText = $('#add-title-input').val();
+                    var $status = $('#word-integration-status');
+                    $status.removeClass('success error').addClass('loading').show().text('Processing...');
+                    $.ajax({
+                        url: word_integration_ajax.ajax_url,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            action: 'word_integration_action',
+                            nonce: word_integration_ajax.nonce,
+                            integration_action: 'add',
+                            section: addText
+                        },
+                        success: function(response) {
+                            $status.removeClass('loading');
+                            if (response.success) {
+                                $status.addClass('success').text(response.message);
+                                $('#word-integration-result').html('<pre>' + JSON.stringify(response.data, null, 2) + '</pre>');
+                            } else {
+                                $status.addClass('error').text(response.message);
+                                $('#word-integration-result').html('<pre>' + (response.data && response.data.response_body ? response.data.response_body : '') + '</pre>');
+                            }
+                        },
+                        error: function() {
+                            $status.removeClass('loading').addClass('error').text('AJAX request failed');
+                        }
+                    });
+                });
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 15px;
