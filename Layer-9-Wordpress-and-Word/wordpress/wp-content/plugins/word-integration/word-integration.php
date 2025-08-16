@@ -159,7 +159,7 @@ class WordIntegrationMakecom {
             </div>
             
             <div class="word-integration-buttons">
-                <button id="add-title-btn" class="cool-button cool-button-primary" data-action="add">
+                <button id="add-title-btn" class="cool-button cool-button-word-light" data-action="add">
                     <span class="button-text">Add Title</span>
                     <span class="button-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -167,15 +167,15 @@ class WordIntegrationMakecom {
                         </svg>
                     </span>
                 </button>
-                <button id="remove-title-btn" class="cool-button cool-button-secondary" data-action="remove">
-                    <span class="button-text">Remove Title</span>
+                <button id="remove-title-btn" class="cool-button cool-button-word-dark" data-action="remove">
+                    <span class="button-text">Remove</span>
                     <span class="button-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M5 12h14"/>
                         </svg>
                     </span>
                 </button>
-                <button id="export-doc-btn" class="cool-button cool-button-accent" data-action="export">
+                <button id="export-doc-btn" class="cool-button cool-button-word-mid" data-action="export">
                     <span class="button-text">Export Document</span>
                     <span class="button-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -186,15 +186,15 @@ class WordIntegrationMakecom {
             </div>
             
             <div id="remove-section-selector" class="word-integration-section" style="display: none;">
-                <h4>Select Section to Remove:</h4>
+                <h4>Remove Section:</h4>
                 <select id="section-dropdown" class="regular-text">
-                    <option value="">Loading sections...</option>
+                    <option value="Title">Title</option>
                 </select>
-                <button id="confirm-remove-btn" class="cool-button cool-button-primary cool-button-sm" style="margin-left: 10px;">
-                    <span class="button-text">Confirm Remove</span>
+                <button id="confirm-remove-btn" class="cool-button cool-button-word-dark cool-button-sm" style="margin-left: 10px;">
+                    <span class="button-text">Remove Title</span>
                     <span class="button-icon">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 6L9 17l-5-5"/>
+                            <path d="M5 12h14"/>
                         </svg>
                     </span>
                 </button>
@@ -202,7 +202,7 @@ class WordIntegrationMakecom {
                     <span class="button-text">Cancel</span>
                     <span class="button-icon">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M18 6L6 18M6 6l12 12"/>
+                            <circle cx="12" cy="12" r="5" fill="white" />
                         </svg>
                     </span>
                 </button>
@@ -246,8 +246,7 @@ class WordIntegrationMakecom {
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
-        
-        /* Cool Animated Buttons */
+        /* Cool Animated Buttons - Word Color Palette */
         .cool-button {
             position: relative;
             display: inline-flex;
@@ -264,19 +263,16 @@ class WordIntegrationMakecom {
             text-decoration: none;
             min-width: 140px;
         }
-        
         .cool-button-sm {
             padding: 8px 16px;
             font-size: 13px;
             min-width: 100px;
         }
-        
         .cool-button .button-text {
             transition: opacity 0.5s ease;
             z-index: 2;
             position: relative;
         }
-        
         .cool-button .button-icon {
             position: absolute;
             right: 8px;
@@ -287,97 +283,82 @@ class WordIntegrationMakecom {
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 4px;
-            transition: all 0.5s ease;
+            background: rgba(255,255,255,0.18);
+            border-radius: 6px;
+            transition: all 0.5s cubic-bezier(.4,0,.2,1);
             z-index: 10;
         }
-        
         .cool-button-sm .button-icon {
             width: 20px;
             height: 20px;
             right: 6px;
         }
-        
         .cool-button:hover .button-text {
             opacity: 0;
         }
-        
         .cool-button:hover .button-icon {
-            width: calc(100% - 8px);
-            background: rgba(255, 255, 255, 0.2);
+            width: calc(100% - 16px);
+            right: 8px;
+            left: auto;
+            background: rgba(255,255,255,0.32);
         }
-        
         .cool-button:active {
             transform: scale(0.95);
         }
-        
-        /* Primary Button */
-        .cool-button-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        /* Word Color Palette Buttons */
+        .cool-button-word-light {
+            background: linear-gradient(90deg, #54a8ec 0%, #2566c1 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 15px rgba(84,168,236,0.18);
         }
-        
-        .cool-button-primary:hover {
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        .cool-button-word-light:hover {
+            box-shadow: 0 6px 20px rgba(84,168,236,0.28);
             transform: translateY(-2px);
         }
-        
-        /* Secondary Button */
-        .cool-button-secondary {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        .cool-button-word-mid {
+            background: linear-gradient(90deg, #2566c1 0%, #3887d7 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
+            box-shadow: 0 4px 15px rgba(37,102,193,0.18);
         }
-        
-        .cool-button-secondary:hover {
-            box-shadow: 0 6px 20px rgba(240, 147, 251, 0.4);
+        .cool-button-word-mid:hover {
+            box-shadow: 0 6px 20px rgba(37,102,193,0.28);
             transform: translateY(-2px);
         }
-        
-        /* Accent Button */
-        .cool-button-accent {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        .cool-button-word-dark {
+            background: linear-gradient(90deg, #1a3e7a 0%, #2566c1 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+            box-shadow: 0 4px 15px rgba(26,62,122,0.18);
         }
-        
-        .cool-button-accent:hover {
-            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+        .cool-button-word-dark:hover {
+            box-shadow: 0 6px 20px rgba(26,62,122,0.28);
             transform: translateY(-2px);
         }
-        
         /* Ghost Button */
         .cool-button-ghost {
             background: transparent;
             border: 2px solid #e0e0e0;
-            color: #666;
+            color: #2566c1;
         }
-        
         .cool-button-ghost .button-icon {
-            background: rgba(0, 0, 0, 0.05);
+            background: rgba(37,102,193,0.05);
         }
-        
         .cool-button-ghost:hover {
-            border-color: #ccc;
-            background: rgba(0, 0, 0, 0.02);
+            border-color: #2566c1;
+            background: rgba(37,102,193,0.02);
         }
-        
         .cool-button-ghost:hover .button-icon {
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(37,102,193,0.12);
         }
-        
         /* Loading state */
         .cool-button:disabled {
             opacity: 0.7;
             cursor: not-allowed;
             transform: none !important;
         }
-        
         .cool-button:disabled:hover {
             transform: none !important;
             box-shadow: none !important;
+        }
         }
         
         .word-integration-section {

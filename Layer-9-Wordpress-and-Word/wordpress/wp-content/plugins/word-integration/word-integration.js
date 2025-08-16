@@ -36,46 +36,15 @@ jQuery(document).ready(function($) {
     }
     
     function loadSections() {
-        $.ajax({
-            url: word_integration_ajax.ajax_url,
-            type: 'POST',
-            data: {
-                action: 'word_integration_action',
-                integration_action: 'get_sections',
-                nonce: word_integration_ajax.nonce
-            },
-            success: function(response) {
-                if (response.success && response.data && response.data.sections) {
-                    currentSections = response.data.sections;
-                    updateSectionDropdown();
-                } else {
-                    console.log('Could not load sections:', response);
-                    // Set default sections if webhook doesn't return them
-                    currentSections = ['Section 1', 'Section 2', 'Section 3'];
-                    updateSectionDropdown();
-                }
-            },
-            error: function(xhr, status, error) {
-                console.log('Error loading sections:', error);
-                // Set default sections on error
-                currentSections = ['Section 1', 'Section 2', 'Section 3'];
-                updateSectionDropdown();
-            }
-        });
+    // Only allow 'Title' section for removal
+    currentSections = ['Title'];
+    updateSectionDropdown();
     }
     
     function updateSectionDropdown() {
-        var $dropdown = $('#section-dropdown');
-        $dropdown.empty();
-        
-        if (currentSections.length > 0) {
-            $dropdown.append('<option value="">Select a section to remove</option>');
-            currentSections.forEach(function(section) {
-                $dropdown.append('<option value="' + section + '">' + section + '</option>');
-            });
-        } else {
-            $dropdown.append('<option value="">No sections available</option>');
-        }
+    var $dropdown = $('#section-dropdown');
+    $dropdown.empty();
+    $dropdown.append('<option value="Title">Title</option>');
     }
     
     function showRemoveSection() {
@@ -98,6 +67,9 @@ jQuery(document).ready(function($) {
         if (action !== 'remove') {
             hideRemoveSection();
         }
+        
+        // Disable all buttons during processing
+        $('.cool-button').prop('disabled', true);
         
         // Show loading status
         showStatus('loading', getLoadingMessage(action));
@@ -150,6 +122,10 @@ jQuery(document).ready(function($) {
                     errorMessage = 'Connection error: ' + error;
                 }
                 showStatus('error', errorMessage);
+            },
+            complete: function() {
+                // Re-enable all buttons after processing
+                $('.cool-button').prop('disabled', false);
             }
         });
     }
