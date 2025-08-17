@@ -14,7 +14,7 @@ BOLD='\033[1m'
 NC='\033[0m'
 
 # System configuration (based on working containers)
-POSTGRES_CONTAINER="mypg"
+POSTGRES_CONTAINER="universal-db-postgres"
 GRAFANA_CONTAINER="universal-db-grafana"
 DB_USER="myuser"
 DB_NAME="mydb"
@@ -34,9 +34,21 @@ print_success() { echo -e "${GREEN}✅ $1${NC}"; }
 print_info() { echo -e "${BLUE}ℹ️  $1${NC}"; }
 print_error() { echo -e "${RED}❌ $1${NC}"; }
 
+COMPOSE_DIR="../Layer-1-Infrastructure"
 # Step 1: Start containers
 print_step "Starting Universal DB Services"
 echo ""
+
+# Check if containers exist, create if missing
+if ! docker ps -a --format '{{.Names}}' | grep -q "^$POSTGRES_CONTAINER$"; then
+    print_info "PostgreSQL container not found. Creating containers with docker-compose..."
+    (cd "$COMPOSE_DIR" && docker-compose up -d)
+fi
+
+if ! docker ps -a --format '{{.Names}}' | grep -q "^$GRAFANA_CONTAINER$"; then
+    print_info "Grafana container not found. Creating containers with docker-compose..."
+    (cd "$COMPOSE_DIR" && docker-compose up -d)
+fi
 
 # Start PostgreSQL
 print_info "Starting PostgreSQL database..."
@@ -58,7 +70,6 @@ else
     exit 1
 fi
 
-echo ""
 
 # Step 2: Wait for services
 print_step "Waiting for Services to Initialize"
@@ -119,7 +130,7 @@ echo ""
 echo -e "${BOLD}🎯 ACCESS INFORMATION:${NC}"
 echo -e "   🌐 Grafana: ${GREEN}http://localhost:3000${NC}"
 echo -e "   🔑 Login: ${YELLOW}admin/admin${NC}"
-echo -e "   �️  Database: ${GREEN}localhost:5433${NC} (myuser/mypass/mydb)"
+echo -e "   🗄️  Database Host: ${GREEN}universal-db-postgres:5432${NC} (myuser/mypass/mydb)"
 echo -e "   📊 Records: ${GREEN}$RECORD_COUNT call records${NC}"
 echo ""
 echo -e "${BOLD}� RESOURCES:${NC}"
