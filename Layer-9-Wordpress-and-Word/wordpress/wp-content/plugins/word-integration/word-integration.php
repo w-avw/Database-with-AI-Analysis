@@ -226,256 +226,180 @@ class WordIntegrationMakecom {
                 <p>Manage your Word document titles using cloud processing</p>
             </div>
             <div class="word-integration-buttons">
-                    <input type="text" id="add-title-input" class="cool-input" placeholder="Type anything..." style="margin-right:10px;max-width:220px;">
-                    <button id="add-title-btn" class="cool-button cool-button-word-light" data-action="add">
-                        <span class="button-text">Add</span>
-                        <span class="button-icon">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 5v14M5 12h14"/>
-                                    ?>
-                                    <div id="word-integration-interface" class="word-integration-container">
-                                        <div class="word-integration-header">
-                                            <h3>Word Document Manager</h3>
-                                            <p>Manage your Word document titles using cloud processing</p>
-                                        </div>
-                                        <div class="word-integration-buttons">
-                                            <input type="text" id="add-title-input" class="cool-input" placeholder="Type anything..." style="margin-right:10px;max-width:220px;">
-                                            <select id="add-section-dropdown" class="cool-input" style="margin-right:10px;max-width:120px;">
-                                                <option value="Title">Title</option>
-                                            </select>
-                                                        ?>
-                                                        <div id="word-integration-interface" class="word-integration-container">
-                                                            <div class="word-integration-header">
-                                                                <h3>Word Document Manager</h3>
-                                                                <p>Manage your Word document titles using cloud processing</p>
-                                                            </div>
-                                                            <div class="word-integration-buttons">
-                                                                <input type="text" id="add-title-input" class="cool-input" placeholder="Type anything..." style="margin-right:10px;max-width:220px;">
-                                                                <select id="add-section-dropdown" class="cool-input" style="margin-right:10px;max-width:120px;">
-                                                                    <option value="Title">Title</option>
-                                                                </select>
-                                                                <button id="add-title-btn" class="cool-button cool-button-word-light" data-action="add">
-                                                                    <span class="button-text">Add</span>
-                                                                    <span class="button-icon">
-                                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                                            <path d="M12 5v14M5 12h14"/>
-                                                                        </svg>
-                                                                    </span>
-                                                                </button>
-                                                                <button id="remove-title-btn" class="cool-button cool-button-word-dark" data-action="remove" style="margin-right:18px;">
-                                                                    <span class="button-text">Remove</span>
-                                                                    <span class="button-icon">
-                                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                                            <path d="M5 12h14"/>
-                                                                        </svg>
-                                                                    </span>
-                                                                </button>
-                                                                <button id="export-doc-btn" class="cool-button cool-button-word-mid" data-action="export" style="margin-right:22px;">
-                                                                    <span class="button-text">Export Document</span>
-                                                                    <span class="button-icon">
-                                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-                                                                        </svg>
-                                                                    </span>
-                                                                </button>
-                                                            </div>
-                                                            <div id="word-integration-status" class="word-integration-status"></div>
-                                                            <div id="word-integration-result" class="word-integration-result"></div>
-                                                        </div>
-                                                        <style>
-                                                        .cool-input { padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; outline: none; transition: border-color 0.3s; }
-                                                        .cool-input:focus { border-color: #2566c1; box-shadow: 0 0 0 2px rgba(37,102,193,0.12); }
-                                                        .word-integration-container { background: #fff; border: 1px solid #ddd; border-radius: 5px; padding: 20px; margin: 20px 0; max-width: 600px; }
-                                                        .word-integration-header { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-                                                        .word-integration-header h3 { margin: 0 0 10px 0; color: #333; }
-                                                        .word-integration-header p { margin: 0; color: #666; font-style: italic; }
-                                                        .word-integration-buttons { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
-                                                        .cool-button { position: relative; display: inline-flex; align-items: center; justify-content: space-between; padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; overflow: hidden; transition: all 0.3s ease; text-decoration: none; min-width: 140px; }
-                                                        .cool-button-sm { padding: 8px 16px; font-size: 13px; min-width: 100px; }
-                                                        .cool-button .button-text { transition: opacity 0.5s ease; z-index: 2; position: relative; min-width: 90px; }
-                                                        .cool-button .button-icon { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.18); border-radius: 6px; transition: all 0.5s cubic-bezier(.4,0,.2,1); z-index: 10; }
-                                                        .cool-button-sm .button-icon { width: 20px; height: 20px; right: 6px; }
-                                                        .cool-button:hover .button-text { opacity: 0; }
-                                                        .cool-button:hover .button-icon { width: calc(100% - 16px); right: 8px; left: auto; background: rgba(255,255,255,0.32); }
-                                                        .cool-button:active { transform: scale(0.95); }
-                                                        .cool-button-word-light { background: linear-gradient(90deg, #54a8ec 0%, #2566c1 100%); color: white; box-shadow: 0 4px 15px rgba(84,168,236,0.18); }
-                                                        .cool-button-word-light:hover { box-shadow: 0 6px 20px rgba(84,168,236,0.28); transform: translateY(-2px); }
-                                                        .cool-button-word-mid { background: linear-gradient(90deg, #2566c1 0%, #3887d7 100%); color: white; box-shadow: 0 4px 15px rgba(37,102,193,0.18); }
-                                                        .cool-button-word-mid:hover { box-shadow: 0 6px 20px rgba(37,102,193,0.28); transform: translateY(-2px); }
-                                                        .cool-button-word-dark { background: linear-gradient(90deg, #1a3e7a 0%, #2566c1 100%); color: white; box-shadow: 0 4px 15px rgba(26,62,122,0.18); }
-                                                        .cool-button-word-dark:hover { box-shadow: 0 6px 20px rgba(26,62,122,0.28); transform: translateY(-2px); }
-                                                        .cool-button-ghost { background: transparent; border: 2px solid #e0e0e0; color: #2566c1; }
-                                                        .cool-button-ghost .button-icon { background: rgba(37,102,193,0.05); }
-                                                        .cool-button-ghost:hover { border-color: #2566c1; background: rgba(37,102,193,0.02); }
-                                                        .cool-button-ghost:hover .button-icon { background: rgba(37,102,193,0.12); }
-                                                        .cool-button:disabled { opacity: 0.7; cursor: not-allowed; transform: none !important; }
-                                                        .cool-button:disabled:hover { transform: none !important; box-shadow: none !important; }
-                                                        .word-integration-section { background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin: 15px 0; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); }
-                                                        .word-integration-section h4 { margin: 0 0 15px 0; color: #333; font-size: 16px; }
-                                                        .word-integration-section select { padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 14px; transition: border-color 0.3s ease; }
-                                                        .word-integration-section select:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
-                                                        .word-integration-status { margin: 15px 0; padding: 12px 16px; border-radius: 8px; display: none; font-weight: 500; }
-                                                        .word-integration-status.loading { background: linear-gradient(135deg, #e7f3ff 0%, #f0f8ff 100%); border: 1px solid #b3d9ff; color: #0073aa; display: block; position: relative; }
-                                                        .word-integration-status.loading::before { content: ''; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; border: 2px solid #0073aa; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-right: 8px; }
-                                                        .word-integration-status.loading { padding-left: 40px; }
-                                                        @keyframes spin { 0% { transform: translateY(-50%) rotate(0deg); } 100% { transform: translateY(-50%) rotate(360deg); } }
-                                                        .word-integration-status.success { background: linear-gradient(135deg, #d4edda 0%, #e7f5e8 100%); border: 1px solid #c3e6cb; color: #155724; display: block; }
-                                                        .word-integration-status.error { background: linear-gradient(135deg, #f8d7da 0%, #fce4e6 100%); border: 1px solid #f5c6cb; color: #721c24; display: block; }
-                                                        .word-integration-result { margin: 15px 0; }
-                                                        .download-link { display: inline-flex; align-items: center; gap: 8px; margin: 10px 0; padding: 12px 20px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3); }
-                                                        .download-link:hover { color: white; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4); }
-                                                        @media (max-width: 600px) { .word-integration-buttons { flex-direction: column; gap: 10px; } .cool-button { width: 100%; justify-content: center; } }
-                                                        </style>
-                                                        <script>
-                                                        jQuery(document).ready(function($) {
-                                                            // Add button handler: send input value and section to backend
-                                                            $('#add-title-btn').off('click').on('click', function(e) {
-                                                                e.preventDefault();
-                                                                var addText = $('#add-title-input').val();
-                                                                var section = $('#add-section-dropdown').val();
-                                                                var $status = $('#word-integration-status');
-                                                                $status.removeClass('success error').addClass('loading').show().text('Processing...');
-                                                                $.ajax({
-                                                                    url: word_integration_ajax.ajax_url,
-                                                                    type: 'POST',
-                                                                    dataType: 'json',
-                                                                    data: {
-                                                                        action: 'word_integration_action',
-                                                                        nonce: word_integration_ajax.nonce,
-                                                                        integration_action: 'add',
-                                                                        section: addText
-                                                                    },
-                                                                    success: function(response) {
-                                                                        $status.removeClass('loading');
-                                                                        if (response.success) {
-                                                                            $status.addClass('success').text(response.message);
-                                                                            $('#word-integration-result').html('<pre>' + JSON.stringify(response.data, null, 2) + '</pre>');
-                                                                        } else {
-                                                                            $status.addClass('error').text(response.message);
-                                                                            $('#word-integration-result').html('<pre>' + (response.data && response.data.response_body ? response.data.response_body : '') + '</pre>');
-                                                                        }
-                                                                    },
-                                                                    error: function() {
-                                                                        $status.removeClass('loading').addClass('error').text('AJAX request failed');
-                                                                    }
-                                                                });
-                                                            });
-                                                        });
-                                                        </script>
-                                                        <?php
-                                                                        </button>
-                                                                        <button id="remove-title-btn" class="cool-button cool-button-word-dark" data-action="remove" style="margin-right:18px;">
-                                                                            <span class="button-text">Remove</span>
-                                                                            <span class="button-icon">
-                                                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                                                    <path d="M5 12h14"/>
-                                                                                </svg>
-                                                                            </span>
-                                                                        </button>
-                                                                        <button id="export-doc-btn" class="cool-button cool-button-word-mid" data-action="export" style="margin-right:22px;">
-                                                                            <span class="button-text">Export Document</span>
-                                                                            <span class="button-icon">
-                                                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-                                                                                </svg>
-                                                                            </span>
-                                                                        </button>
-                                                                    </div>
-                                                                    <div id="word-integration-status" class="word-integration-status"></div>
-                                                                    <div id="word-integration-result" class="word-integration-result"></div>
-                                                                </div>
-                                                                <style>
-                                                                .cool-input { padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; outline: none; transition: border-color 0.3s; }
-                                                                .cool-input:focus { border-color: #2566c1; box-shadow: 0 0 0 2px rgba(37,102,193,0.12); }
-                                                                .word-integration-container { background: #fff; border: 1px solid #ddd; border-radius: 5px; padding: 20px; margin: 20px 0; max-width: 600px; }
-                                                                .word-integration-header { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-                                                                .word-integration-header h3 { margin: 0 0 10px 0; color: #333; }
-                                                                .word-integration-header p { margin: 0; color: #666; font-style: italic; }
-                                                                .word-integration-buttons { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
-                                                                .cool-button { position: relative; display: inline-flex; align-items: center; justify-content: space-between; padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; overflow: hidden; transition: all 0.3s ease; text-decoration: none; min-width: 140px; }
-                                                                .cool-button-sm { padding: 8px 16px; font-size: 13px; min-width: 100px; }
-                                                                .cool-button .button-text { transition: opacity 0.5s ease; z-index: 2; position: relative; min-width: 90px; }
-                                                                .cool-button .button-icon { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.18); border-radius: 6px; transition: all 0.5s cubic-bezier(.4,0,.2,1); z-index: 10; }
-                                                                .cool-button-sm .button-icon { width: 20px; height: 20px; right: 6px; }
-                                                                .cool-button:hover .button-text { opacity: 0; }
-                                                                .cool-button:hover .button-icon { width: calc(100% - 16px); right: 8px; left: auto; background: rgba(255,255,255,0.32); }
-                                                                .cool-button:active { transform: scale(0.95); }
-                                                                .cool-button-word-light { background: linear-gradient(90deg, #54a8ec 0%, #2566c1 100%); color: white; box-shadow: 0 4px 15px rgba(84,168,236,0.18); }
-                                                                .cool-button-word-light:hover { box-shadow: 0 6px 20px rgba(84,168,236,0.28); transform: translateY(-2px); }
-                                                                .cool-button-word-mid { background: linear-gradient(90deg, #2566c1 0%, #3887d7 100%); color: white; box-shadow: 0 4px 15px rgba(37,102,193,0.18); }
-                                                                .cool-button-word-mid:hover { box-shadow: 0 6px 20px rgba(37,102,193,0.28); transform: translateY(-2px); }
-                                                                .cool-button-word-dark { background: linear-gradient(90deg, #1a3e7a 0%, #2566c1 100%); color: white; box-shadow: 0 4px 15px rgba(26,62,122,0.18); }
-                                                                .cool-button-word-dark:hover { box-shadow: 0 6px 20px rgba(26,62,122,0.28); transform: translateY(-2px); }
-                                                                .cool-button-ghost { background: transparent; border: 2px solid #e0e0e0; color: #2566c1; }
-                                                                .cool-button-ghost .button-icon { background: rgba(37,102,193,0.05); }
-                                                                .cool-button-ghost:hover { border-color: #2566c1; background: rgba(37,102,193,0.02); }
-                                                                .cool-button-ghost:hover .button-icon { background: rgba(37,102,193,0.12); }
-                                                                .cool-button:disabled { opacity: 0.7; cursor: not-allowed; transform: none !important; }
-                                                                .cool-button:disabled:hover { transform: none !important; box-shadow: none !important; }
-                                                                .word-integration-section { background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin: 15px 0; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); }
-                                                                .word-integration-section h4 { margin: 0 0 15px 0; color: #333; font-size: 16px; }
-                                                                .word-integration-section select { padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 14px; transition: border-color 0.3s ease; }
-                                                                .word-integration-section select:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
-                                                                .word-integration-status { margin: 15px 0; padding: 12px 16px; border-radius: 8px; display: none; font-weight: 500; }
-                                                                .word-integration-status.loading { background: linear-gradient(135deg, #e7f3ff 0%, #f0f8ff 100%); border: 1px solid #b3d9ff; color: #0073aa; display: block; position: relative; }
-                                                                .word-integration-status.loading::before { content: ''; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; border: 2px solid #0073aa; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-right: 8px; }
-                                                                .word-integration-status.loading { padding-left: 40px; }
-                                                                @keyframes spin { 0% { transform: translateY(-50%) rotate(0deg); } 100% { transform: translateY(-50%) rotate(360deg); } }
-                                                                .word-integration-status.success { background: linear-gradient(135deg, #d4edda 0%, #e7f5e8 100%); border: 1px solid #c3e6cb; color: #155724; display: block; }
-                                                                .word-integration-status.error { background: linear-gradient(135deg, #f8d7da 0%, #fce4e6 100%); border: 1px solid #f5c6cb; color: #721c24; display: block; }
-                                                                .word-integration-result { margin: 15px 0; }
-                                                                .download-link { display: inline-flex; align-items: center; gap: 8px; margin: 10px 0; padding: 12px 20px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3); }
-                                                                .download-link:hover { color: white; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4); }
-                                                                @media (max-width: 600px) { .word-integration-buttons { flex-direction: column; gap: 10px; } .cool-button { width: 100%; justify-content: center; } }
-                                                                </style>
-                                                                <script>
-                                                                jQuery(document).ready(function($) {
-                                                                    // Add button handler: send input value and section to backend
-                                                                    $('#add-title-btn').off('click').on('click', function(e) {
-                                                                        e.preventDefault();
-                                                                        var addText = $('#add-title-input').val();
-                                                                        var section = $('#add-section-dropdown').val();
-                                                                        var $status = $('#word-integration-status');
-                                                                        $status.removeClass('success error').addClass('loading').show().text('Processing...');
-                                                                        $.ajax({
-                                                                            url: word_integration_ajax.ajax_url,
-                                                                            type: 'POST',
-                                                                            dataType: 'json',
-                                                                            data: {
-                                                                                action: 'word_integration_action',
-                                                                                nonce: word_integration_ajax.nonce,
-                                                                                integration_action: 'add',
-                                                                                section: addText
-                                                                            },
-                                                                            success: function(response) {
-                                                                                $status.removeClass('loading');
-                                                                                if (response.success) {
-                                                                                    $status.addClass('success').text(response.message);
-                                                                                    $('#word-integration-result').html('<pre>' + JSON.stringify(response.data, null, 2) + '</pre>');
-                                                                                } else {
-                                                                                    $status.addClass('error').text(response.message);
-                                                                                    $('#word-integration-result').html('<pre>' + (response.data && response.data.response_body ? response.data.response_body : '') + '</pre>');
-                                                                                }
-                                                                            },
-                                                                            error: function() {
-                                                                                $status.removeClass('loading').addClass('error').text('AJAX request failed');
-                                                                            }
-                                                                        });
-                                                                    });
-                                                                });
-                                                                </script>
-                                                                <?php
-                gap: 10px;
-            }
-            
-            .cool-button {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-            </style>
+                <input type="text" id="add-title-input" class="cool-input" placeholder="Type anything..." style="margin-right:10px;max-width:220px;">
+                <select id="add-section-dropdown" class="cool-input" style="margin-right:10px;max-width:120px;">
+                    <option value="Title">Title</option>
+                </select>
+                <button id="add-title-btn" class="cool-button cool-button-word-light" data-action="add">
+                    <span class="button-text">Add</span>
+                    <span class="button-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                    </span>
+                </button>
+                <button id="remove-title-btn" class="cool-button cool-button-word-dark" data-action="remove" style="margin-right:18px;">
+                    <span class="button-text">Remove</span>
+                    <span class="button-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14"/>
+                        </svg>
+                    </span>
+                </button>
+                <button id="export-doc-btn" class="cool-button cool-button-word-mid" data-action="export" style="margin-right:22px;">
+                    <span class="button-text">Export Document</span>
+                    <span class="button-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+            <div id="word-integration-status" class="word-integration-status"></div>
+            <div id="word-integration-result" class="word-integration-result"></div>
+        </div>
+        <style>
+        .cool-input { padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; outline: none; transition: border-color 0.3s; }
+        .cool-input:focus { border-color: #2566c1; box-shadow: 0 0 0 2px rgba(37,102,193,0.12); }
+        .word-integration-container { background: #fff; border: 1px solid #ddd; border-radius: 5px; padding: 20px; margin: 20px 0; max-width: 600px; }
+        .word-integration-header { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .word-integration-header h3 { margin: 0 0 10px 0; color: #333; }
+        .word-integration-header p { margin: 0; color: #666; font-style: italic; }
+        .word-integration-buttons { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+        .cool-button { position: relative; display: inline-flex; align-items: center; justify-content: space-between; padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; overflow: hidden; transition: all 0.3s ease; text-decoration: none; min-width: 140px; }
+        .cool-button-sm { padding: 8px 16px; font-size: 13px; min-width: 100px; }
+        .cool-button .button-text { transition: opacity 0.5s ease; z-index: 2; position: relative; min-width: 90px; }
+        .cool-button .button-icon { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.18); border-radius: 6px; transition: all 0.5s cubic-bezier(.4,0,.2,1); z-index: 10; }
+        .cool-button-sm .button-icon { width: 20px; height: 20px; right: 6px; }
+        .cool-button:hover .button-text { opacity: 0; }
+        .cool-button:hover .button-icon { width: calc(100% - 16px); right: 8px; left: auto; background: rgba(255,255,255,0.32); }
+        .cool-button:active { transform: scale(0.95); }
+        .cool-button-word-light { background: linear-gradient(90deg, #54a8ec 0%, #2566c1 100%); color: white; box-shadow: 0 4px 15px rgba(84,168,236,0.18); }
+        .cool-button-word-light:hover { box-shadow: 0 6px 20px rgba(84,168,236,0.28); transform: translateY(-2px); }
+        .cool-button-word-mid { background: linear-gradient(90deg, #2566c1 0%, #3887d7 100%); color: white; box-shadow: 0 4px 15px rgba(37,102,193,0.18); }
+        .cool-button-word-mid:hover { box-shadow: 0 6px 20px rgba(37,102,193,0.28); transform: translateY(-2px); }
+        .cool-button-word-dark { background: linear-gradient(90deg, #1a3e7a 0%, #2566c1 100%); color: white; box-shadow: 0 4px 15px rgba(26,62,122,0.18); }
+        .cool-button-word-dark:hover { box-shadow: 0 6px 20px rgba(26,62,122,0.28); transform: translateY(-2px); }
+        .cool-button-ghost { background: transparent; border: 2px solid #e0e0e0; color: #2566c1; }
+        .cool-button-ghost .button-icon { background: rgba(37,102,193,0.05); }
+        .cool-button-ghost:hover { border-color: #2566c1; background: rgba(37,102,193,0.02); }
+        .cool-button-ghost:hover .button-icon { background: rgba(37,102,193,0.12); }
+        .cool-button:disabled { opacity: 0.7; cursor: not-allowed; transform: none !important; }
+        .cool-button:disabled:hover { transform: none !important; box-shadow: none !important; }
+        .word-integration-section { background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin: 15px 0; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); }
+        .word-integration-section h4 { margin: 0 0 15px 0; color: #333; font-size: 16px; }
+        .word-integration-section select { padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 14px; transition: border-color 0.3s ease; }
+        .word-integration-section select:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+        .word-integration-status { margin: 15px 0; padding: 12px 16px; border-radius: 8px; display: none; font-weight: 500; }
+        .word-integration-status.loading { background: linear-gradient(135deg, #e7f3ff 0%, #f0f8ff 100%); border: 1px solid #b3d9ff; color: #0073aa; display: block; position: relative; }
+        .word-integration-status.loading::before { content: ''; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; border: 2px solid #0073aa; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-right: 8px; }
+        .word-integration-status.loading { padding-left: 40px; }
+        @keyframes spin { 0% { transform: translateY(-50%) rotate(0deg); } 100% { transform: translateY(-50%) rotate(360deg); } }
+        .word-integration-status.success { background: linear-gradient(135deg, #d4edda 0%, #e7f5e8 100%); border: 1px solid #c3e6cb; color: #155724; display: block; }
+        .word-integration-status.error { background: linear-gradient(135deg, #f8d7da 0%, #fce4e6 100%); border: 1px solid #f5c6cb; color: #721c24; display: block; }
+        .word-integration-result { margin: 15px 0; }
+        .download-link { display: inline-flex; align-items: center; gap: 8px; margin: 10px 0; padding: 12px 20px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3); }
+        .download-link:hover { color: white; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4); }
+        @media (max-width: 600px) { .word-integration-buttons { flex-direction: column; gap: 10px; } .cool-button { width: 100%; justify-content: center; } }
+        </style>
+        <script>
+        jQuery(document).ready(function($) {
+            // Add button handler
+            $('#add-title-btn').off('click').on('click', function(e) {
+                e.preventDefault();
+                var addText = $('#add-title-input').val();
+                var section = $('#add-section-dropdown').val();
+                var $status = $('#word-integration-status');
+                $status.removeClass('success error').addClass('loading').show().text('Processing...');
+                $.ajax({
+                    url: word_integration_ajax.ajax_url,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        action: 'word_integration_action',
+                        nonce: word_integration_ajax.nonce,
+                        integration_action: 'add',
+                        section: section,
+                        value: addText
+                    },
+                    success: function(response) {
+                        $status.removeClass('loading');
+                        if (response.success) {
+                            $status.addClass('success').text(response.message);
+                            $('#word-integration-result').html('<pre>' + JSON.stringify(response.data, null, 2) + '</pre>');
+                        } else {
+                            $status.addClass('error').text(response.message);
+                            $('#word-integration-result').html('<pre>' + (response.data && response.data.response_body ? response.data.response_body : '') + '</pre>');
+                        }
+                    },
+                    error: function() {
+                        $status.removeClass('loading').addClass('error').text('AJAX request failed');
+                    }
+                });
+            });
+            // Remove button handler
+            $('#remove-title-btn').off('click').on('click', function(e) {
+                e.preventDefault();
+                var section = $('#add-section-dropdown').val();
+                var $status = $('#word-integration-status');
+                $status.removeClass('success error').addClass('loading').show().text('Processing...');
+                $.ajax({
+                    url: word_integration_ajax.ajax_url,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        action: 'word_integration_action',
+                        nonce: word_integration_ajax.nonce,
+                        integration_action: 'remove',
+                        section: section
+                    },
+                    success: function(response) {
+                        $status.removeClass('loading');
+                        if (response.success) {
+                            $status.addClass('success').text(response.message);
+                            $('#word-integration-result').html('<pre>' + JSON.stringify(response.data, null, 2) + '</pre>');
+                        } else {
+                            $status.addClass('error').text(response.message);
+                            $('#word-integration-result').html('<pre>' + (response.data && response.data.response_body ? response.data.response_body : '') + '</pre>');
+                        }
+                    },
+                    error: function() {
+                        $status.removeClass('loading').addClass('error').text('AJAX request failed');
+                    }
+                });
+            });
+            // Export button handler
+            $('#export-doc-btn').off('click').on('click', function(e) {
+                e.preventDefault();
+                var $status = $('#word-integration-status');
+                $status.removeClass('success error').addClass('loading').show().text('Processing...');
+                $.ajax({
+                    url: word_integration_ajax.ajax_url,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        action: 'word_integration_action',
+                        nonce: word_integration_ajax.nonce,
+                        integration_action: 'export'
+                    },
+                    success: function(response) {
+                        $status.removeClass('loading');
+                        if (response.success) {
+                            $status.addClass('success').text(response.message);
+                            $('#word-integration-result').html('<pre>' + JSON.stringify(response.data, null, 2) + '</pre>');
+                        } else {
+                            $status.addClass('error').text(response.message);
+                            $('#word-integration-result').html('<pre>' + (response.data && response.data.response_body ? response.data.response_body : '') + '</pre>');
+                        }
+                    },
+                    error: function() {
+                        $status.removeClass('loading').addClass('error').text('AJAX request failed');
+                    }
+                });
+            });
+        });
+        </script>
         <?php
-        
         return ob_get_clean();
     }
     
