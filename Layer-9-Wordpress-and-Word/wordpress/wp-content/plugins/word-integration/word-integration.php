@@ -225,12 +225,12 @@ class WordIntegrationMakecom {
                 <h3>Word Document Manager</h3>
                 <p>Manage your Word document titles using cloud processing</p>
             </div>
-            <div class="word-integration-buttons">
+            <div class="word-integration-buttons" style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
                 <input type="text" id="add-title-input" class="cool-input" placeholder="Type anything..." style="margin-right:10px;max-width:220px;">
                 <select id="add-section-dropdown" class="cool-input" style="margin-right:10px;max-width:120px;">
                     <option value="Title">Title</option>
                 </select>
-                <button id="add-title-btn" class="cool-button cool-button-word-light" data-action="add">
+                <button id="add-title-btn" class="cool-button cool-button-word-light" data-action="add" style="margin-right:10px;">
                     <span class="button-text">Add</span>
                     <span class="button-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -238,7 +238,7 @@ class WordIntegrationMakecom {
                         </svg>
                     </span>
                 </button>
-                <button id="remove-title-btn" class="cool-button cool-button-word-dark" data-action="remove" style="margin-right:18px;">
+                <button id="remove-title-btn" class="cool-button cool-button-word-dark" data-action="remove" style="margin-right:10px;">
                     <span class="button-text">Remove</span>
                     <span class="button-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -246,7 +246,7 @@ class WordIntegrationMakecom {
                         </svg>
                     </span>
                 </button>
-                <button id="export-doc-btn" class="cool-button cool-button-word-mid" data-action="export" style="margin-right:22px;">
+                <button id="export-doc-btn" class="cool-button cool-button-word-mid" data-action="export">
                     <span class="button-text">Export Document</span>
                     <span class="button-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -425,7 +425,6 @@ class WordIntegrationMakecom {
                 'data' => null
             );
         }
-        
         // Prepare request data
         $request_data = array(
             'action' => $action,
@@ -434,24 +433,14 @@ class WordIntegrationMakecom {
         );
         switch ($action) {
             case 'add':
-                // $section is the user text from JS
-                $request_data['Add'] = $section;
+                $request_data['section'] = 'Title';
+                $request_data['text'] = $section;
                 break;
             case 'remove':
-                if (empty($section)) {
-                    return array(
-                        'success' => false,
-                        'message' => 'Section is required for remove action',
-                        'data' => null
-                    );
-                }
-                $request_data['section'] = $section;
+                $request_data['section'] = 'Title';
                 break;
             case 'export':
                 // No additional data needed for export
-                break;
-            case 'get_sections':
-                // Request to get available sections
                 break;
             default:
                 return array(
@@ -460,9 +449,6 @@ class WordIntegrationMakecom {
                     'data' => null
                 );
         }
-        
-    // API Key logic removed
-        
         // Send HTTP request to Make.com webhook
         $response = wp_remote_post($this->webhook_url, array(
             'method' => 'POST',
@@ -473,7 +459,6 @@ class WordIntegrationMakecom {
             ),
             'body' => json_encode($request_data)
         ));
-        
         if (is_wp_error($response)) {
             return array(
                 'success' => false,
@@ -481,10 +466,8 @@ class WordIntegrationMakecom {
                 'data' => null
             );
         }
-        
         $response_code = wp_remote_retrieve_response_code($response);
         $response_body = wp_remote_retrieve_body($response);
-        
         if ($response_code !== 200) {
             return array(
                 'success' => false,
@@ -492,9 +475,7 @@ class WordIntegrationMakecom {
                 'data' => array('response_body' => $response_body)
             );
         }
-        
         $data = json_decode($response_body, true);
-        
         if (json_last_error() !== JSON_ERROR_NONE) {
             return array(
                 'success' => false,
@@ -502,7 +483,6 @@ class WordIntegrationMakecom {
                 'data' => array('response_body' => $response_body)
             );
         }
-        
         return array(
             'success' => true,
             'message' => isset($data['message']) ? $data['message'] : 'Operation completed successfully',
