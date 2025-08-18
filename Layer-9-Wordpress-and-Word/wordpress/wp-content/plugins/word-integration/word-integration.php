@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Doc Edition via Make.com
  * Description: Integrate WordPress with Make.com webhooks for Word document editing
- * Version: 1.0.7
+ * Version: 1.0.10
  * Author: Universal DB
  */
 
