@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Doc Edition via Make.com
  * Description: Integrate WordPress with Make.com webhooks for Word document editing
- * Version: 1.0.10
+ * Version: 1.0.13
  * Author: Universal DB
  */
 
@@ -222,8 +222,8 @@ class WordIntegrationMakecom {
         ?>
         <div id="word-integration-interface" class="word-integration-container">
             <div class="word-integration-header">
-                <h3>Word Document Manager</h3>
-                <p>Manage your Word document titles using cloud processing</p>
+                <h3>Report Download</h3>
+                <p>Manage your report using cloud processing to edit faster and smoother</p>
             </div>
             <div class="word-integration-buttons" style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
                 <input type="text" id="add-title-input" class="cool-input" placeholder="Type anything..." style="margin-right:10px;max-width:220px;">
@@ -231,29 +231,14 @@ class WordIntegrationMakecom {
                     <option value="Title">Title</option>
                 </select>
                 <button id="add-title-btn" class="cool-button cool-button-word-light" data-action="add" style="margin-right:10px;">
-                    <span class="button-text">Add</span>
+                    <span class="button-text">Add and Download</span>
                     <span class="button-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M12 5v14M5 12h14"/>
                         </svg>
                     </span>
                 </button>
-                <button id="remove-title-btn" class="cool-button cool-button-word-dark" data-action="remove" style="margin-right:10px;">
-                    <span class="button-text">Remove</span>
-                    <span class="button-icon">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14"/>
-                        </svg>
-                    </span>
-                </button>
-                <button id="export-doc-btn" class="cool-button cool-button-word-mid" data-action="export">
-                    <span class="button-text">Export Document</span>
-                    <span class="button-icon">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-                        </svg>
-                    </span>
-                </button>
+                <!-- Only Add button remains -->
             </div>
             <div id="word-integration-status" class="word-integration-status"></div>
             <div id="word-integration-result" class="word-integration-result"></div>
@@ -315,6 +300,7 @@ class WordIntegrationMakecom {
                     url: word_integration_ajax.ajax_url,
                     type: 'POST',
                     dataType: 'json',
+                    timeout: 10000,
                     data: {
                         action: 'word_integration_action',
                         nonce: word_integration_ajax.nonce,
@@ -326,7 +312,18 @@ class WordIntegrationMakecom {
                         $status.removeClass('loading');
                         if (response.success) {
                             $status.addClass('success').text(response.message);
-                            $('#word-integration-result').html('<pre>' + JSON.stringify(response.data, null, 2) + '</pre>');
+                            // If response contains file data, trigger download
+                            if (response.data && response.data.file_url) {
+                                var link = document.createElement('a');
+                                link.href = response.data.file_url;
+                                link.download = '';
+                                document.body.appendChild(link);
+                                link.click();
+                                document.body.removeChild(link);
+                                $('#word-integration-result').html('<a class="download-link" href="' + response.data.file_url + '" download>Download .docx</a>');
+                            } else {
+                                $('#word-integration-result').html('<pre>' + JSON.stringify(response.data, null, 2) + '</pre>');
+                            }
                         } else {
                             $status.addClass('error').text(response.message);
                             $('#word-integration-result').html('<pre>' + (response.data && response.data.response_body ? response.data.response_body : '') + '</pre>');
@@ -408,16 +405,18 @@ class WordIntegrationMakecom {
         if (!wp_verify_nonce($_POST['nonce'], 'word_integration_nonce')) {
             wp_die('Security check failed');
         }
-        
-        $action = sanitize_text_field($_POST['integration_action']);
+        $action = isset($_POST['integration_action']) ? sanitize_text_field($_POST['integration_action']) : '';
         $section = isset($_POST['section']) ? sanitize_text_field($_POST['section']) : '';
-        
-        $response = $this->send_webhook_request($action, $section);
-        
-        wp_send_json($response);
+        $text = isset($_POST['value']) ? sanitize_text_field($_POST['value']) : '';
+        if ($action === 'add' && $section === 'Title' && !empty($text)) {
+            $response = $this->send_webhook_request($action, $section, $text);
+            wp_send_json($response);
+        } else {
+            wp_send_json(array('success' => false, 'message' => 'Invalid request', 'data' => null));
+        }
     }
     
-    private function send_webhook_request($action, $section = '') {
+    private function send_webhook_request($action, $section = '', $text = '') {
         if (empty($this->webhook_url)) {
             return array(
                 'success' => false,
@@ -429,30 +428,14 @@ class WordIntegrationMakecom {
         $request_data = array(
             'action' => $action,
             'timestamp' => current_time('mysql'),
-            'source' => 'wordpress'
+            'source' => 'wordpress',
+            'section' => $section,
+            'text' => $text
         );
-        switch ($action) {
-            case 'add':
-                $request_data['section'] = 'Title';
-                $request_data['text'] = $section;
-                break;
-            case 'remove':
-                $request_data['section'] = 'Title';
-                break;
-            case 'export':
-                // No additional data needed for export
-                break;
-            default:
-                return array(
-                    'success' => false,
-                    'message' => 'Invalid action specified',
-                    'data' => null
-                );
-        }
         // Send HTTP request to Make.com webhook
         $response = wp_remote_post($this->webhook_url, array(
             'method' => 'POST',
-            'timeout' => 30,
+            'timeout' => 10,
             'headers' => array(
                 'Content-Type' => 'application/json',
                 'User-Agent' => 'WordPress-WordIntegration/1.0'
@@ -482,6 +465,10 @@ class WordIntegrationMakecom {
                 'message' => 'Invalid JSON response from webhook',
                 'data' => array('response_body' => $response_body)
             );
+        }
+        // If Make.com response contains file data, adapt to provide file_url for download
+        if (isset($data['Data']) && is_string($data['Data']) && preg_match('/https?:\/\/.+\.docx/', $data['Data'])) {
+            $data['file_url'] = $data['Data'];
         }
         return array(
             'success' => true,
