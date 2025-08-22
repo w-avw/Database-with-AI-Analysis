@@ -2,19 +2,22 @@
 
 Un sistema robusto y escalable para importar, procesar y analizar grandes volúmenes de datos de llamadas telefónicas con arquitectura en capas.
 
+
 ## 🏗️ Arquitectura del Sistema
 
-Este proyecto está organizado en 8 capas arquitectónicas bien definidas, cada una con responsabilidades específicas:
+Este proyecto está organizado en 10 capas arquitectónicas bien definidas, cada una con responsabilidades específicas:
 
 ```
-Layer-1-Infrastructure/     → Contenedores Docker y configuración base
-Layer-2-Database-Schema/     → Esquema de base de datos y estructura
-Layer-3-Core-Import-Engine/  → Motor de importación de alto rendimiento
-Layer-4-File-Processing/     → Procesamiento y conversión de archivos
-Layer-5-Connection-Management/ → Gestión de conexiones de base de datos
-Layer-6-User-Interfaces/     → Interfaces para usuarios finales
-Layer-7-Automation/          → Automatización y monitoreo de servicios
-Layer-8-Analytics/           → Análisis de datos y reportes
+Layer-1-Infrastructure/         → Contenedores Docker y configuración base
+Layer-2-Database-Schema/        → Esquema de base de datos y estructura
+Layer-3-Core-Import-Engine/     → Motor de importación de alto rendimiento
+Layer-4-File-Processing/        → Procesamiento y conversión de archivos
+Layer-5-Connection-Management/  → Gestión de conexiones de base de datos
+Layer-6-User-Interfaces/        → Interfaces para usuarios finales
+Layer-7-Automation/             → Automatización y monitoreo de servicios
+Layer-8-Analytics/              → Análisis de datos y reportes
+Layer-9-Wordpress-and-Word/     → Integración WordPress y edición de documentos Word vía Make.com
+Layer-10-Botpress-Integration/  → API de analítica para integración con Botpress y agentes AI
 ```
 
 ## 🚀 Características Principales
@@ -52,6 +55,7 @@ Base de datos: PostgreSQL en Docker
 Rendimiento: 12,000+ registros/segundo
 Estado: ✅ Importación completa exitosa
 ```
+
 
 ## 🛠️ Instalación Rápida
 
@@ -91,6 +95,23 @@ cd ../Layer-7-Automation
 ./service_manager.sh start
 ```
 
+### 5. Integración WordPress y Make.com (Layer 9)
+```bash
+# Instalar el plugin en WordPress
+cp Layer-9-Wordpress-and-Word/wordpress/wp-content/plugins/word-integration Layer-9-Wordpress-and-Word/wordpress/wp-content/plugins/
+# Activar el plugin desde el panel de WordPress
+# Configurar el webhook de Make.com en el plugin
+```
+
+### 6. API de Analítica para Botpress y Agentes AI (Layer 10)
+```bash
+# Activar entorno virtual si aplica
+source .venv/bin/activate
+# Iniciar la API Flask
+python Layer-10-Botpress-Integration/db_api.py
+# Acceder a la API desde Botpress o navegador usando la URL pública de Codespaces
+```
+
 ## 📱 Uso del Sistema
 
 ### Importación Manual
@@ -126,7 +147,8 @@ python3 monitor.py
 python3 query_builder.py
 ```
 
-## 🔍 Análisis Disponibles
+
+## 🔍 Análisis y Funcionalidades Disponibles
 
 ### Estadísticas Básicas
 - Total de registros y completitud de datos
@@ -147,6 +169,18 @@ python3 query_builder.py
 - Detección de campos nulos/vacíos
 - Identificación de posibles duplicados
 - Validación de formatos de datos
+
+### Integración WordPress y Make.com (Layer 9)
+- Edición remota de títulos de documentos Word vía webhooks
+- Exportación y gestión de secciones de documentos
+- Procesamiento seguro y escalable en la nube
+
+### API de Analítica para Botpress y Agentes AI (Layer 10)
+- Exposición de endpoints de analítica vía Flask API
+- Consultas flexibles para error analysis, system failure, etc.
+- Integración directa con Botpress Cloud y otros agentes AI
+- CORS habilitado para peticiones externas
+- Acceso público vía URL de Codespaces (no requiere ngrok)
 
 ## 🏛️ Detalles de Arquitectura
 
@@ -200,6 +234,7 @@ python3 query_builder.py
 
 ## 🔧 Configuración
 
+
 ### Variables de Entorno (Layer-1-Infrastructure/.env)
 ```bash
 PGHOST=localhost
@@ -230,6 +265,7 @@ failed/      → Archivos con errores de importación
 - **Monitor en tiempo real**: Actualización cada 5 segundos
 - **Exportaciones**: Formatos JSON y CSV
 
+
 ## 🛡️ Características de Producción
 
 ### Confiabilidad
@@ -250,6 +286,11 @@ failed/      → Archivos con errores de importación
 - **Manejo seguro** de archivos temporales
 - **Aislamiento de procesos**
 
+### Integraciones Externas
+- **WordPress + Make.com**: Edición y exportación de documentos Word vía webhooks
+- **Botpress + API Flask**: Acceso a analítica y recomendaciones AI sin ngrok, usando URL pública de Codespaces
+
+
 ## 🔄 Flujo de Datos Completo
 
 ```
@@ -261,6 +302,8 @@ failed/      → Archivos con errores de importación
 6. Archivo → processed/ o failed/
 7. Análisis disponible inmediatamente
 8. Monitor muestra estadísticas actualizadas
+9. Edición y exportación de documentos Word vía WordPress + Make.com
+10. Consulta de analítica y recomendaciones AI vía API Flask + Botpress
 ```
 
 ## 📚 Documentación por Capas
@@ -271,6 +314,7 @@ Cada capa incluye su propio README.md con:
 - **Instrucciones de uso**
 - **Ejemplos de código**
 - **Dependencias y configuración**
+
 
 ## 🆘 Solución de Problemas
 
@@ -306,6 +350,15 @@ cd Layer-7-Automation
 ./service_manager.sh uninstall
 ./service_manager.sh install
 ```
+
+#### Integración WordPress/Make.com
+- Verificar que el plugin esté activo y el webhook configurado
+- Revisar logs de Make.com para errores de procesamiento
+
+#### API Flask/Botpress
+- Verificar que la API esté corriendo en el puerto público (ej: 5434)
+- Usar la URL pública de Codespaces para acceder (no ngrok)
+- Revisar CORS y credenciales de base de datos
 
 ## 📞 Estructura de Datos
 
@@ -370,13 +423,16 @@ CREATE TABLE call_records (
 
 Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
 
+
 ## 🎉 Estado del Proyecto
 
 ✅ **COMPLETADO**: Sistema completamente funcional
 - ✅ Importación de 24,842 registros exitosa
-- ✅ Arquitectura en 8 capas implementada
+- ✅ Arquitectura en 10 capas implementada
 - ✅ Automatización completa operativa
 - ✅ Análisis y monitoreo funcionando
+- ✅ Integración WordPress + Make.com operativa
+- ✅ API de analítica para Botpress y agentes AI funcionando
 - ✅ Documentación completa disponible
 
 El sistema está listo para uso en producción con todas las características implementadas y probadas.
