@@ -1,6 +1,6 @@
 # Sistema Completo de Importación y Análisis de Datos
 
-Un sistema robusto y escalable para importar, procesar y analizar grandes volúmenes de datos de llamadas telefónicas con arquitectura en capas.
+Un sistema robusto y escalable para importar, procesar y analizar grandes volúmenes de datos de llamadas por radio con arquitectura en capas, conectado con Botpress.com para generar un Agente analista de datos de IA (adicionalmente, conectado con Grafana para dicha visualización).
 
 
 ## 🏗️ Arquitectura del Sistema
