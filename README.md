@@ -1,4 +1,4 @@
-# Universal DB - Sistema Completo de Importación y Análisis de Datos
+# Sistema Completo de Importación y Análisis de Datos
 
 Un sistema robusto y escalable para importar, procesar y analizar grandes volúmenes de datos de llamadas telefónicas con arquitectura en capas.
 
